@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luxen LLC — Building Forward</title>
+<link rel="preconnect" href="https://rsms.me/">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<style>
+  :root{
+    --bg:#0b0c0e; --fg:#f5f7fb; --muted:#9aa0a6; --dim:#7a8088;
+    --hair:rgba(255,255,255,.08); --panel:rgba(255,255,255,.04);
+    --accent:#b9c3ff; --accent-2:#a3b1ff; --ok:#22d3a6; --warn:#f59e0b; --bad:#ef4444;
+    --max:860px; --lh:1.65; --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    line-height:var(--lh); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:var(--max); margin:0 auto; padding:64px 20px 96px}
+  header{
+    position:sticky; top:0; backdrop-filter:saturate(180%) blur(8px);
+    background:linear-gradient(180deg, rgba(11,12,14,.7), rgba(11,12,14,.35) 55%, rgba(11,12,14,0));
+    border-bottom:1px solid var(--hair);
+    z-index:10;
+  }
+  .nav{max-width:var(--max); margin:0 auto; padding:14px 20px; display:flex; gap:12px; align-items:center; justify-content:space-between}
+  .brand{letter-spacing:.6px; font-weight:600}
+  .chips{display:flex; gap:10px; flex-wrap:wrap}
+  .chip{
+    padding:8px 12px; border:1px solid var(--hair); border-radius:999px; font-size:.9rem; color:var(--fg);
+    background:rgba(255,255,255,.02); text-decoration:none; transition:transform .2s ease, border-color .2s ease;
+  }
+  .chip:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.2)}
+  .hero{padding:56px 0 18px}
+  .eyebrow{color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-size:.78rem; margin-bottom:10px}
+  h1{font-size: clamp(2.1rem, 3.8vw, 3.2rem); line-height:1.18; margin:0 0 16px; font-weight:800}
+  .lede{color:var(--muted); font-size:1.05rem; max-width:60ch}
+  .manifesto{
+    margin-top:28px; padding:22px 20px; border-radius:var(--radius);
+    border:1px solid var(--hair); background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  }
+  .manifesto p{margin:0}
+  .manifesto strong{background:linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  section{padding:28px 0; border-top:1px dashed var(--hair); margin-top:28px}
+  h2{font-size:1.25rem; margin:0 0 12px}
+  .muted{color:var(--muted)}
+  .grid{display:grid; gap:14px}
+  .card{
+    border:1px solid var(--hair); border-radius:16px; padding:16px 14px;
+    background:var(--panel);
+    transition:transform .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .card:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.055)}
+  .k{font-weight:600}
+  .tag{font-size:.78rem; color:var(--dim); border:1px solid var(--hair); border-radius:999px; padding:3px 8px}
+  .row{display:flex; align-items:center; gap:10px; justify-content:space-between}
+  .pill{
+    display:inline-block; border:1px solid var(--hair); border-radius:999px; padding:8px 12px; font-size:.9rem;
+    background:rgba(255,255,255,.02)
+  }
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+  .foot{margin-top:38px; color:var(--dim); font-size:.92rem}
+  a.inline{color:var(--accent); text-decoration:none; border-bottom:1px dashed rgba(186,196,255,.4); padding-bottom:1px}
+  a.inline:hover{border-bottom-color:rgba(186,196,255,.8)}
+  .hint{user-select:none}
+  .caret{
+    display:inline-block; width:.6ch; border-right:2px solid var(--fg); animation:blink 1.05s steps(1,end) infinite
+  }
+  @keyframes blink{50%{border-right-color:transparent}}
+  .rise{opacity:0; transform:translateY(8px); animation:rise .55s ease forwards}
+  @keyframes rise{to{opacity:1; transform:none}}
+  .ghost-grid::before{
+    content:""; position:fixed; inset:0; pointer-events:none; background-image:
+      linear-gradient(to bottom, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size:100% 24px; opacity:0; transition:opacity .2s ease;
+  }
+  .ghost-grid.on::before{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <div class="brand">
+      <img src="/Users/ganeshtalluri/Desktop/Project /Luxen/Varyn/Images/logoluxen.jpg" 
+           alt="Luxen Logo" style="height:55px; width:auto; object-fit:contain; vertical-align:middle; margin-right:8px;">
+      Luxen&nbsp;LLC
+    </div>
+    <div class="chips">
+      <a class="chip" href="#why">why</a>
+      <a class="chip" href="#ledger">ledger</a>
+      <a class="chip" href="#direction">direction</a>
+      <a class="chip" href="#principles">principles</a>
+      <a class="chip" href="#contact">contact</a>
+    </div>
+  </nav>
+</header>
+
+
+<main class="wrap">
+  <section class="hero rise" id="why">
+    <div class="eyebrow">building forward</div>
+    <h1>We publish our failures, then build past them<span class="caret" aria-hidden="true"></span></h1>
+    <p class="lede">White text. No fluff. We tried things, some broke, some landed. We’re folding the lessons back into a tighter, braver roadmap.</p>
+    <div class="manifesto" style="margin-top:18px">
+      <p><strong>Signal over spectacle.</strong> Simple beats clever. Users before ego. We don’t chase hype; we ship instruments that last.</p>
+    </div>
+  </section>
+
+  <section id="ledger">
+    <h2>Attempt Ledger</h2>
+    <p class="muted" style="margin-bottom:10px">Products we shipped, what cracked, and what we kept.</p>
+    <div id="attempts" class="grid"></div>
+  </section>
+
+  <section id="direction">
+    <h2>New Direction</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="row"><span class="k">From prototypes → platforms</span><span class="tag">2025→</span></div>
+        <p class="muted">Stability, data ownership, and clinical-grade reliability as table stakes.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="k">From features → systems</span><span class="tag">durable</span></div>
+        <p class="muted">Tight loops: intake → inference → feedback → iteration, with explicit guardrails.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="k">From velocity → veracity</span><span class="tag">measured</span></div>
+        <p class="muted">Ship slower if it means trust. Benchmarks > vibes. Audits > anecdotes.</p>
+      </div>
+    </div>
+    <div class="foot">This is not a pivot; it’s an adult upgrade.</div>
+  </section>
+
+  <section id="principles">
+    <h2>Operating Principles</h2>
+    <div class="grid">
+      <div class="card"><span class="k">Write the risks first.</span><p class="muted">We enumerate how it breaks before we code how it works.</p></div>
+      <div class="card"><span class="k">Own the loop.</span><p class="muted">Data path, evaluation, and updates live under one roof.</p></div>
+      <div class="card"><span class="k">Simplicity compounds.</span><p class="muted">Every extra setting is a future support ticket.</p></div>
+      <div class="card"><span class="k">Honesty earns compounding trust.</span><p class="muted">Failures are public, fixes are documented, improvements are measured.</p></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p class="muted">Interested in building with us? <a class="inline" href="mailto:contactus@luxenai.org">contactus@luxenai.org</a></p>
+    <p class="hint muted">Press <span class="pill">g</span> to toggle grid; <span class="pill">/</span> to jump to search; <span class="pill">1–5</span> to navigate.</p>
+  </section>
+</main>
+
+<script type="module">
+  const root = document.documentElement
+  const host = document.body
+
+  /**
+   * @typedef {"succeeded"|"paused"|"sunset"} Status
+   * @typedef {{name:string, tagline:string, status:Status, why:string, kept:string[], link?:string}} Attempt
+   * @type {readonly Attempt[]}
+   */
+  const attempts = /** @type {const} */ ([
+    {
+      name:"Varyn",
+      tagline:"skin-scan insights via phone camera",
+      status:"sunset",
+      why:"inconsistent capture → noisy labels; UX overfit to early testers; weak clinical signal",
+      kept:["fast on-device prefilter","artifact rejection","privacy-first capture"],
+      link:"https://luxenai.org/varyn"
+    },
+    {
+      name:"Flux",
+      tagline:"sweat-patch diagnostics for real-time biomarkers",
+      status:"paused",
+      why:"supply chain + calibration drift; hard to maintain accuracy outside lab; cost curve not friendly",
+      kept:["sensor QA harness","calibration pipeline","BLE packet schema"]
+    },
+    {
+      name:"Kalo",
+      tagline:"nutrition agent tied to pantry + macros",
+      status:"sunset",
+      why:"retention stalled at week 4; cold-start data dependency; grocer APIs flaky",
+      kept:["pantry OCR","constraint solver for meals","household profiles"],
+      link:"https://luxenai.org/kalo"
+    }
+  ])
+
+  const statusBadge = (s) => s==="succeeded" ? "ok" : (s==="paused" ? "warn" : "bad")
+  const statusText = (s) => s==="succeeded" ? "succeeded" : (s==="paused" ? "paused" : "sunset")
+
+  const container = document.getElementById("attempts")
+  const frag = document.createDocumentFragment()
+  for (const a of attempts){
+    const card = document.createElement("div")
+    card.className = "card"
+    const row = document.createElement("div")
+    row.className = "row"
+    const left = document.createElement("div")
+    left.innerHTML = `<span class="k">${a.name}</span> · <span class="muted">${a.tagline}</span>`
+    const right = document.createElement("div")
+    right.innerHTML = `<span class="pill ${statusBadge(a.status)}">${statusText(a.status)}</span>`
+    row.append(left, right)
+
+    const why = document.createElement("p")
+    why.className = "muted"
+    why.style.margin = "8px 0 8px"
+    why.textContent = "what cracked: " + a.why
+
+    const kept = document.createElement("p")
+    kept.className = "muted"
+    kept.innerHTML = "we kept: " + a.kept.map(k=>`<span class="tag" style="margin-right:6px">${k}</span>`).join(" ")
+
+    card.append(row, why, kept)
+
+    if(a.link){
+      const link = document.createElement("a")
+      link.href = a.link
+      link.target = "_blank"
+      link.rel = "noopener"
+      link.className = "inline"
+      link.textContent = "details"
+      const p = document.createElement("p")
+      p.append(link)
+      p.style.marginTop = "6px"
+      card.append(p)
+    }
+    frag.append(card)
+  }
+  container.append(frag)
+
+  const sections = ["why","ledger","direction","principles","contact"]
+  const go = (i) => {
+    const id = sections[i]; if(!id) return
+    const el = document.getElementById(id)
+    if(el) el.scrollIntoView({behavior:"smooth", block:"start"})
+  }
+
+  addEventListener("keydown", (e)=>{
+    if(e.key>="1" && e.key<="5"){ go(Number(e.key)-1) }
+    if(e.key==="g"){ host.classList.toggle("ghost-grid") }
+    if(e.key==="/"){
+      e.preventDefault()
+      const first = document.querySelector('a.inline, .chip')
+      if(first) first.focus()
+    }
+  })
+</script>
+</body>
+</html>

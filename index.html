@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Luxen — Building Forward</title>
+<title>experimenting</title>
 
 <link rel="preconnect" href="https://rsms.me/">
 <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
 <!-- Favicons (place these files next to index.html) -->
-<link rel="icon" type="image/png" sizes="32x32" href="logo-512.png?v=6">
-<link rel="icon" href="favicon.ico?v=6" sizes="any">
-<link rel="shortcut icon" href="favicon.ico?v=6" type="image/x-icon">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=6">
+<link rel="icon" type="image/png" sizes="32x32" href="logo-512.png?v=7">
+<link rel="icon" href="favicon.ico?v=7" sizes="any">
+<link rel="shortcut icon" href="favicon.ico?v=7" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=7">
 <meta name="theme-color" content="#0b0c0e">
 
 <style>
   :root{
-    --bg:#0b0c0e; --bg-2:#0e1013; --fg:#ffffff; --muted:#9aa0a6; --dim:#7a8088;
+    --bg:#0b0c0e; --fg:#ffffff; --muted:#9aa0a6; --dim:#7a8088;
     --hair:rgba(255,255,255,.08); --panel:rgba(255,255,255,.04);
     --accent:#b9c3ff; --accent-2:#a3b1ff; --ok:#22d3a6; --warn:#f59e0b; --bad:#ef4444;
     --max:1080px; --lh:1.65; --radius:18px; --hdr:72px;
@@ -27,9 +27,7 @@
   html,body{height:100%}
   body{
     margin:0; color:var(--fg);
-    background:
-      radial-gradient(1200px 600px at 20% -10%, rgba(170,180,255,.08), transparent 60%),
-      linear-gradient(180deg,var(--bg),var(--bg-2));
+    background: var(--bg); /* <<< single solid background */
     font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     letter-spacing:.01px; line-height:var(--lh);
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
@@ -41,7 +39,7 @@
     position:sticky; top:0; z-index:40;
     border-bottom:1px solid rgba(255,255,255,.06);
     backdrop-filter:saturate(160%) blur(10px);
-    background:linear-gradient(180deg, rgba(11,12,14,.92), rgba(11,12,14,.72) 60%, rgba(11,12,14,0));
+    background: rgba(11,12,14,.9); /* solid-ish to match body */
   }
   .nav{
     max-width:var(--max); margin:0 auto; padding:12px 18px; height:var(--hdr);
@@ -63,8 +61,8 @@
     background:rgba(255,255,255,.02); text-decoration:none; transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
     opacity:0; transform:translateY(6px);
   }
-  .chip:hover{transform:translateY(-2px); border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.05); box-shadow:0 10px 28px -16px rgba(185,195,255,.35)}
-  .chip.active{border-color:rgba(186,196,255,.45); background:linear-gradient(180deg, rgba(186,196,255,.18), rgba(186,196,255,.08))}
+  .chip:hover{transform:translateY(-2px); border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.05); box-shadow:0 10px 28px -16px rgba(185,195,255,.2)}
+  .chip.active{border-color:rgba(186,196,255,.30); background:rgba(186,196,255,.10)}
   .chip:nth-child(1){animation:rise .5s ease .12s forwards}
   .chip:nth-child(2){animation:rise .5s ease .18s forwards}
   .chip:nth-child(3){animation:rise .5s ease .24s forwards}
@@ -75,60 +73,42 @@
   /* Layout */
   .wrap{max-width:var(--max); margin:0 auto; padding:var(--s6) 20px var(--s7)}
   .hero{position:relative; padding:var(--s6) 0 var(--s4)}
-  .aura{
-    position:absolute; inset:-18vh -38vw auto -38vw; height:74vh;
-    background:radial-gradient(60% 60% at 50% 40%, rgba(169,179,255,.22), rgba(169,179,255,0) 60%),
-               radial-gradient(40% 40% at 70% 60%, rgba(70,90,255,.17), rgba(70,90,255,0) 60%);
-    filter:blur(46px); pointer-events:none; opacity:.72; transform:translateY(0);
-    animation:auraFloat 12s ease-in-out infinite;
-  }
-  @keyframes auraFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
 
   .eyebrow{color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-size:.78rem; margin-bottom:var(--s1)}
   h1{font-size: clamp(2.45rem, 4.6vw, 3.7rem); line-height:1.14; margin:0 0 var(--s2); font-weight:900;
      opacity:0; transform:translateY(10px); animation:rise .6s ease .08s forwards}
   .lede{color:var(--muted); font-size:1.08rem; max-width:62ch; margin-bottom:var(--s3); opacity:0; transform:translateY(10px); animation:rise .6s ease .16s forwards}
   .manifesto{margin-top:var(--s2); padding:22px 20px; border-radius:var(--radius); border:1px solid var(--hair);
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); opacity:0; transform:translateY(10px); animation:rise .6s ease .22s forwards}
+    background:rgba(255,255,255,.02); opacity:0; transform:translateY(10px); animation:rise .6s ease .22s forwards}
   .manifesto p{margin:0}
   .manifesto strong{background:linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent}
 
-  /* Sections: soft hairline separators, no dashed lines */
+  /* Sections: NO hairline/gradients for a perfectly uniform background */
   section{
-    position: relative;
     padding: var(--s5) 0;
     margin-top: var(--s4);
     border-top: none;
-  }
-  section::before{
-    content:"";
-    position:absolute;
-    left:0; right:0; top:0; height:1px;
-    background:linear-gradient(to right, transparent, rgba(255,255,255,.07), transparent);
-    pointer-events:none;
   }
 
   h2{font-size:1.28rem; margin:0 0 var(--s2)}
   .muted{color:var(--muted)}
   .grid{display:grid; gap:16px}
 
-  /* Cards: soft outline + gentle depth (no banding) */
+  /* Cards */
   .card{
     border:none;
     border-radius:16px;
     padding:18px 16px;
-    background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+    background:rgba(255,255,255,.03);
     box-shadow:
-      0 1px 0 rgba(255,255,255,.04) inset,
       0 0 0 1px rgba(255,255,255,.06),
       0 18px 40px -24px rgba(0,0,0,.45);
     transition: transform .24s ease, box-shadow .24s ease, background .24s ease, filter .24s ease;
   }
   .card:hover{
     transform:translateY(-2px);
-    background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+    background:rgba(255,255,255,.04);
     box-shadow:
-      0 1px 0 rgba(255,255,255,.05) inset,
       0 0 0 1px rgba(255,255,255,.09),
       0 22px 50px -22px rgba(0,0,0,.55);
   }
@@ -178,11 +158,11 @@
   @media (max-width:820px){
     .menu-btn{display:flex}
     .menu{position:absolute; left:0; right:0; top:var(--hdr); padding:12px 18px; display:none; flex-wrap:wrap; gap:10px;
-      background:linear-gradient(180deg, rgba(11,12,14,.97), rgba(11,12,14,.9)); border-bottom:1px solid var(--hair);}
+      background:rgba(11,12,14,.97); border-bottom:1px solid var(--hair);}
     .menu.open{display:flex}
   }
   @media (prefers-reduced-motion:reduce){
-    .aura,.chip,.brand,h1,.lede,.manifesto,.heart{animation:none}
+    .chip,.brand,h1,.lede,.manifesto,.heart{animation:none}
     .reveal{transition:none}
   }
 </style>
@@ -207,7 +187,6 @@
 
 <main class="wrap">
   <section class="hero" id="why">
-    <div class="aura" id="aura" aria-hidden="true"></div>
     <div class="eyebrow">building forward</div>
     <h1>We publish our failures, then build past them<span class="caret" aria-hidden="true"></span></h1>
     <p class="lede">Simple beats clever. Users before ego. We don’t chase hype; we ship instruments that last.</p>
@@ -391,14 +370,6 @@
     }
   }, {rootMargin:"-5% 0px -10% 0px", threshold:.05})
   document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
-
-  // Hero aura parallax
-  const aura = document.getElementById('aura')
-  document.addEventListener('scroll', ()=>{
-    const y = window.scrollY
-    const translate = Math.max(-24, Math.min(24, y*0.03))
-    aura.style.transform = `translateY(${translate}px)`
-  }, {passive:true})
 </script>
 </body>
 </html>

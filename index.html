@@ -3,80 +3,102 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Luxen LLC</title>
-<link rel="icon" href="logoluxen_copy-removebg-preview copy.png" />
+<title>Luxen — Applied AI Lab</title>
+
+<!-- Proper favicon with multiple resolutions -->
+<link rel="icon" type="image/png" sizes="32x32" href="logoluxen_copy-removebg-preview.png">
+<link rel="icon" type="image/png" sizes="64x64" href="logoluxen_copy-removebg-preview.png">
+<link rel="apple-touch-icon" href="logoluxen_copy-removebg-preview.png" />
+
 <style>
   :root{--fg:#f2f2f2;--muted:#c6c8cd}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font:400 16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#000;color:var(--fg);overflow:hidden}
+  body{
+    font:400 16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    background:#000;color:var(--fg);overflow:hidden
+  }
 
   /* Background video */
   .bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#000}
-  .bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
+  .bg video{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;opacity:0;transition:opacity .6s ease;
+  }
   .bg video.ready{opacity:1}
 
-  /* Readability gradient */
-  .shade{position:fixed;inset:0;z-index:1;
-    background:linear-gradient(90deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,.20) 70%, rgba(0,0,0,.05) 100%)}
-
-  /* Layout */
-  .wrap{position:relative;z-index:2;height:100%;display:grid;place-items:center start;padding:6vh 6vw}
-  .stack{max-width:980px}
-  h1{font-weight:800;letter-spacing:-.01em;line-height:.98;font-size:clamp(32px,8vw,86px)}
-  .lead{margin-top:14px;color:var(--muted);max-width:56ch;font-size:clamp(14px,2.2vw,18px)}
-
-  /* Rotating loop text (no ring, just a single line that cycles) */
-  .loop{margin-top:22px;display:flex;gap:10px;align-items:center;color:#e8fff7}
-  .dot{width:7px;height:7px;border-radius:50%;background:#79ffe1}
-  .step{font-size:14px;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
-
-  /* Logo + contact */
-  .logo{position:fixed;left:16px;top:14px;z-index:3;display:flex;align-items:center;gap:8px}
-  <link rel="icon" href="logoluxen_copy-removebg-preview.png" sizes="64x64" />
-
-.logo img{
-  width:36px;
-  height:36px;
-  object-fit:contain;
-}
-
-.logo span{
-  font-weight:600;
-  font-size:16px;
-  letter-spacing:.03em;
-}
-
-
-  .contact{position:fixed;right:18px;bottom:16px;z-index:3;color:#dfe3e6;font-size:14px}
-  .contact a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4)}
-  .contact a:hover{border-bottom-color:#fff}
-
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce){
-    .bg video{animation:none}
+  .shade{
+    position:fixed;inset:0;z-index:1;
+    background:linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.2) 70%, rgba(0,0,0,.05) 100%)
   }
+
+  /* Logo */
+  .logo{
+    position:fixed;left:32px;top:26px;z-index:3;
+    display:flex;align-items:center;gap:12px;
+  }
+  .logo img{
+    width:48px;height:48px;object-fit:contain;
+    filter:drop-shadow(0 0 4px rgba(0,0,0,.6));
+  }
+  .logo span{
+    font-weight:700;font-size:20px;letter-spacing:.02em;
+  }
+
+  /* Center stack */
+  .wrap{
+    position:relative;z-index:2;height:100%;
+    display:grid;place-items:center start;padding:6vh 7vw;
+  }
+  .stack{max-width:1080px}
+  h1{
+    font-weight:800;letter-spacing:-.01em;
+    line-height:.98;font-size:clamp(36px,7.5vw,88px);
+  }
+  .lead{
+    margin-top:18px;color:var(--muted);
+    max-width:62ch;font-size:clamp(15px,2vw,19px);
+  }
+
+  /* Rotating loop text */
+  .loop{margin-top:26px;display:flex;gap:10px;align-items:center;color:#e8fff7}
+  .dot{width:8px;height:8px;border-radius:50%;background:#79ffe1}
+  .step{font-size:15px;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+
+  /* Contact */
+  .contact{
+    position:fixed;right:28px;bottom:22px;z-index:3;
+    color:#dfe3e6;font-size:14px;
+  }
+  .contact a{
+    color:#fff;text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,.4)
+  }
+  .contact a:hover{border-bottom-color:#fff}
 </style>
 </head>
+
 <body>
 
-<!-- Background video: keep the file next to this HTML -->
+<!-- Background video -->
 <div class="bg">
-  <video id="bg" src="133424c8-ccbf-47c3-9e12-fe390600d1ff.mp4" autoplay muted loop playsinline></video>
+  <video id="bg" src="bg.mp4" autoplay muted loop playsinline></video>
 </div>
 
 <div class="shade"></div>
 
+<!-- Top-left logo -->
 <div class="logo">
-  <img src="logoluxen_copy-removebg-preview copy.png" alt="Luxen" />
+  <img src="logoluxen_copy-removebg-preview.png" alt="Luxen">
   <span>Luxen</span>
 </div>
 
+<!-- Text block -->
 <main class="wrap">
   <div class="stack">
     <h1>We’re building an applied AI lab, not a single-product company.</h1>
     <p class="lead">
-      Our manifesto: treat AI as an engineering discipline: identify emergent friction, design domain-specific systems that resolve it, and retain reusable infrastructure from each cycle.
+      Our manifesto: treat AI as an engineering discipline—identify emergent friction, design domain-specific systems that resolve it, and retain reusable infrastructure from each cycle.
     </p>
 
     <div class="loop">
@@ -91,27 +113,28 @@
 </div>
 
 <script>
-  // Fade video when ready
   const v = document.getElementById('bg');
   const ready = () => v.classList.add('ready');
   v.addEventListener('loadeddata', ready, { once:true });
   v.addEventListener('canplay', ready, { once:true });
 
-  // Minimal copy rotation (no ring)
-  const lines = [
+  const lines=[
     "OBSERVE FRICTION — real workflows, not speculative markets.",
     "PROTOTYPE INSTRUMENTS — minimal systems that test a concrete hypothesis.",
     "MEASURE FAILURE — publish cracks, noise sources, calibration drifts.",
     "RETAIN SIGNAL — extract validated modules, schemas, feedback loops.",
     "COMPOUND INSIGHT — reapply assets to the next frontier."
   ];
-  const el = document.getElementById('step');
-  let i = 0;
-  setInterval(() => { i = (i+1) % lines.length; el.textContent = lines[i]; }, 5500);
+  const el=document.getElementById('step');
+  let i=0;
+  setInterval(()=>{i=(i+1)%lines.length;el.textContent=lines[i]},5200);
 
-  // Hard-stop scrolling
-  window.addEventListener('wheel', e => { e.preventDefault(); }, { passive:false });
-  window.addEventListener('keydown', e => { if (['PageDown','PageUp','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault(); });
+  // Prevent scroll
+  window.addEventListener('wheel', e => e.preventDefault(), {passive:false});
+  window.addEventListener('keydown', e => {
+    if(['PageDown','PageUp','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();
+  });
 </script>
+
 </body>
 </html>

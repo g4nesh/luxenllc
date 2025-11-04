@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Luxen LLC — Applied AI Lab building domain-specific systems</title>
 <meta name="description" content="Luxen LLC is an applied AI lab building domain-specific systems that resolve real workflow friction and compound reusable infrastructure across cycles." />
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
@@ -24,45 +24,135 @@
 <link rel="apple-touch-icon" sizes="512x512" href="logoluxen_copy-removebg-preview copy.png">
 
 <style>
-  :root{--fg:#f2f2f2;--muted:#c6c8cd}
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{font:400 16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#000;color:var(--fg);overflow:hidden}
+:root{--fg:#f2f2f2;--muted:#c6c8cd}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{font-size:100%}
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  font-weight:400;
+  font-size:clamp(0.95rem,0.6rem + 1.2vw,1.1rem);
+  line-height:1.55;
+  background:#000;
+  color:var(--fg);
+  overflow:hidden;
+}
 
-  .bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#000}
-  .bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
-  .bg video.ready{opacity:1}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#000}
+.bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
+.bg video.ready{opacity:1}
 
-  .shade{position:fixed;inset:0;z-index:1;background:linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.58) 45%, rgba(0,0,0,.22) 70%, rgba(0,0,0,.06) 100%)}
+.shade{
+  position:fixed;inset:0;z-index:1;
+  background:linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.58) 45%, rgba(0,0,0,.22) 70%, rgba(0,0,0,.06) 100%)
+}
 
-  .logo{position:fixed;left:32px;top:24px;z-index:3}
-  .logo img{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(0,0,0,.65))}
+.logo{
+  position:fixed;
+  left:calc(env(safe-area-inset-left) + clamp(12px,2vw,32px));
+  top:calc(env(safe-area-inset-top) + clamp(10px,1.5vw,24px));
+  z-index:3
+}
+.logo img{
+  width:clamp(56px,8vw,96px);
+  height:clamp(56px,8vw,96px);
+  object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(0,0,0,.65))
+}
 
-  .wrap{position:relative;z-index:2;height:100%;display:grid;place-items:center start;padding:6vh 7vw}
-  .stack{max-width:1080px}
-  h1{font-weight:900;letter-spacing:-.01em;line-height:.98;font-size:clamp(40px,7.8vw,92px)}
-  .lead{margin-top:20px;color:var(--muted);max-width:62ch;font-size:clamp(15px,2vw,20px)}
+.wrap{
+  position:relative;z-index:2;height:100%;
+  display:grid;
+  align-items:center;
+  justify-items:start;
+  padding:clamp(6vh,8vh,10vh) clamp(5vw,7vw,10vw)
+}
 
-  .loop{margin-top:28px;display:flex;gap:10px;align-items:center;color:#e8fff7}
-  .dot{width:10px;height:10px;border-radius:50%;background:#79ffe1;box-shadow:0 0 16px rgba(121,255,225,.55)}
-  .step{font-size:15px;letter-spacing:.12em;text-transform:uppercase;opacity:.92}
+.stack{
+  width:min(92vw,clamp(320px,88vw,1080px))
+}
 
-  .projects{margin-top:40px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
-  .projects h2{font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;width:100%}
-  .project-link{color:#fff;font-weight:600;text-decoration:none;padding:8px 14px;border:1px solid rgba(255,255,255,.2);border-radius:999px;transition:background .2s,transform .2s}
-  .project-link:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+h1{
+  font-weight:900;
+  letter-spacing:-.01em;
+  line-height:.98;
+  font-size:clamp(32px,6.5vw,92px)
+}
 
-  .cta{position:fixed;right:24px;bottom:24px;z-index:4;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);padding:14px 18px;border-radius:999px;text-decoration:none;color:#fff;font-weight:700;letter-spacing:.02em;box-shadow:0 8px 28px rgba(0,0,0,.35)}
-  .cta:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
-  .cta:active{transform:translateY(0)}
-  .arrow{width:18px;height:18px;display:inline-block}
-  .arrow svg{width:100%;height:100%}
-  @keyframes nudge{0%{transform:translateX(0)}50%{transform:translateX(6px)}100%{transform:translateX(0)}}
-  .arrow svg{animation:nudge 1.6s ease-in-out infinite}
-  @media (prefers-reduced-motion: reduce){
-    .bg video{transition:none}
-    .arrow svg{animation:none}
-  }
+.lead{
+  margin-top:clamp(12px,2.2vw,20px);
+  color:var(--muted);
+  max-width:62ch;
+  font-size:clamp(14px,1.6vw,20px)
+}
+
+.loop{
+  margin-top:clamp(16px,2.5vw,28px);
+  display:flex;gap:clamp(6px,1vw,10px);align-items:center;color:#e8fff7
+}
+.dot{
+  width:clamp(8px,1.2vw,12px);
+  height:clamp(8px,1.2vw,12px);
+  border-radius:50%;
+  background:#79ffe1;
+  box-shadow:0 0 16px rgba(121,255,225,.55)
+}
+.step{font-size:clamp(12px,1.2vw,15px);letter-spacing:.12em;text-transform:uppercase;opacity:.92}
+
+.projects{
+  margin-top:clamp(20px,3vw,40px);
+  display:flex;flex-wrap:wrap;gap:clamp(8px,1.2vw,16px);align-items:center
+}
+.projects h2{
+  font-size:clamp(11px,1.1vw,14px);
+  font-weight:600;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:clamp(4px,0.6vw,6px);
+  width:100%
+}
+.project-link{
+  color:#fff;font-weight:600;text-decoration:none;
+  padding:clamp(6px,1vw,10px) clamp(10px,1.4vw,16px);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+  transition:background .2s,transform .2s
+}
+.project-link:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+
+.cta{
+  position:fixed;
+  right:calc(env(safe-area-inset-right) + clamp(12px,1.8vw,24px));
+  bottom:calc(env(safe-area-inset-bottom) + clamp(12px,1.8vw,24px));
+  z-index:4;
+  display:flex;align-items:center;gap:clamp(6px,1vw,10px);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(10px);
+  padding:clamp(10px,1.6vw,14px) clamp(14px,2vw,18px);
+  border-radius:999px;
+  text-decoration:none;color:#fff;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 8px 28px rgba(0,0,0,.35);
+  touch-action:manipulation
+}
+.cta:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.cta:active{transform:translateY(0)}
+.arrow{width:clamp(16px,1.4vw,20px);height:clamp(16px,1.4vw,20px);display:inline-block}
+.arrow svg{width:100%;height:100%}
+@keyframes nudge{0%{transform:translateX(0)}50%{transform:translateX(6px)}100%{transform:translateX(0)}}
+.arrow svg{animation:nudge 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){
+  .bg video{transition:none}
+  .arrow svg{animation:none}
+}
+
+/* Guardrails for ultra-wide and ultra-tall */
+@media (min-aspect-ratio: 21/9){
+  .shade{background:linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.58) 35%, rgba(0,0,0,.18) 65%, rgba(0,0,0,.04) 100%)}
+}
+@media (max-aspect-ratio: 9/16){
+  .wrap{padding:clamp(6vh,9vh,12vh) clamp(4vw,6vw,8vw)}
+  .stack{width:min(94vw,720px)}
+}
 </style>
 
 <script type="application/ld+json">
@@ -128,24 +218,24 @@
 </a>
 
 <script>
-  const v=document.getElementById('bg');
-  const ready=()=>v.classList.add('ready');
-  v.addEventListener('loadeddata',ready,{once:true});
-  v.addEventListener('canplay',ready,{once:true});
+const v=document.getElementById('bg');
+const ready=()=>v.classList.add('ready');
+v.addEventListener('loadeddata',ready,{once:true});
+v.addEventListener('canplay',ready,{once:true});
 
-  const lines=[
-    "OBSERVE FRICTION — real workflows, not speculative markets.",
-    "PROTOTYPE INSTRUMENTS — minimal systems that test a concrete hypothesis.",
-    "MEASURE FAILURE — publish cracks, noise sources, calibration drifts.",
-    "RETAIN SIGNAL — extract validated modules, schemas, feedback loops.",
-    "COMPOUND INSIGHT — reapply assets to the next frontier."
-  ];
-  const el=document.getElementById('step');
-  let i=0;
-  setInterval(()=>{i=(i+1)%lines.length;el.textContent=lines[i]},5200);
+const lines=[
+  "OBSERVE FRICTION — real workflows, not speculative markets.",
+  "PROTOTYPE INSTRUMENTS — minimal systems that test a concrete hypothesis.",
+  "MEASURE FAILURE — publish cracks, noise sources, calibration drifts.",
+  "RETAIN SIGNAL — extract validated modules, schemas, feedback loops.",
+  "COMPOUND INSIGHT — reapply assets to the next frontier."
+];
+const el=document.getElementById('step');
+let i=0;
+setInterval(()=>{i=(i+1)%lines.length;el.textContent=lines[i]},5200);
 
-  window.addEventListener('wheel',e=>e.preventDefault(),{passive:false});
-  window.addEventListener('keydown',e=>{if(['PageDown','PageUp','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();});
+window.addEventListener('wheel',e=>e.preventDefault(),{passive:false});
+window.addEventListener('keydown',e=>{if(['PageDown','PageUp','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();});
 </script>
 </body>
 </html>

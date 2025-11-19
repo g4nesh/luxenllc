@@ -1,241 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Luxen LLC — Applied AI Lab building domain-specific systems</title>
-<meta name="description" content="Luxen LLC is an applied AI lab building domain-specific systems that resolve real workflow friction and compound reusable infrastructure across cycles." />
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-<meta name="googlebot" content="index,follow" />
-<link rel="canonical" href="https://luxenai.org/" />
-<meta property="og:title" content="Luxen LLC — Applied AI Lab" />
-<meta property="og:description" content="Treat AI as an engineering discipline. Identify friction, design domain-specific systems, retain reusable infrastructure." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://luxenai.org/" />
-<meta property="og:image" content="logoluxen_copy-removebg-preview copy.png" />
-<meta property="og:video" content="133424c8-ccbf-47c3-9e12-fe390600d1ff.mp4" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Luxen LLC — Applied AI Lab" />
-<meta name="twitter:description" content="Domain-specific AI systems that solve real workflows and compound reusable infrastructure." />
-<meta name="twitter:image" content="logoluxen_copy-removebg-preview copy.png" />
-<meta name="theme-color" content="#000000" />
-<link rel="icon" type="image/png" sizes="128x128" href="logoluxen_copy-removebg-preview copy.png">
-<link rel="icon" type="image/png" sizes="256x256" href="logoluxen_copy-removebg-preview copy.png">
-<link rel="apple-touch-icon" sizes="512x512" href="logoluxen_copy-removebg-preview copy.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxen AI | Applied AI Lab</title>
+    <link rel="icon" type="image/png" href="logoluxen_copy-removebg-preview copy.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Replaced flat background with a gradient in body */
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --cursor-size: 8px;
+            --cursor-outline-size: 40px;
+        }
 
-<style>
-:root{--fg:#f2f2f2;--muted:#c6c8cd}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-html{font-size:100%}
-body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  font-weight:400;
-  font-size:clamp(0.95rem,0.6rem + 1.2vw,1.1rem);
-  line-height:1.55;
-  background:#000;
-  color:var(--fg);
-  overflow:hidden;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor */
+        }
 
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#000}
-.bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
-.bg video.ready{opacity:1}
+        body {
+            /* SUBTLE DARK GRADIENT BACKGROUND */
+            background: radial-gradient(circle at 50% 0%, #131318 0%, #020202 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-.shade{
-  position:fixed;inset:0;z-index:1;
-  background:linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.58) 45%, rgba(0,0,0,.22) 70%, rgba(0,0,0,.06) 100%)
-}
+        /* --- Layer 1: Deep Background Orb --- */
+        #orb-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -2;
+            pointer-events: none; 
+        }
 
-.logo{
-  position:fixed;
-  left:calc(env(safe-area-inset-left) + clamp(12px,2vw,32px));
-  top:calc(env(safe-area-inset-top) + clamp(10px,1.5vw,24px));
-  z-index:3
-}
-.logo img{
-  width:clamp(56px,8vw,96px);
-  height:clamp(56px,8vw,96px);
-  object-fit:contain;
-  filter:drop-shadow(0 0 8px rgba(0,0,0,.65))
-}
+        /* --- Layer 2: The Granulated Cube --- */
+        #cube-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1; /* Behind text, in front of orb */
+            pointer-events: none;
+            mix-blend-mode: screen; 
+        }
 
-.wrap{
-  position:relative;z-index:2;height:100%;
-  display:grid;
-  align-items:center;
-  justify-items:start;
-  padding:clamp(6vh,8vh,10vh) clamp(5vw,7vw,10vw)
-}
+        /* --- Custom Cursor --- */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
 
-.stack{
-  width:min(92vw,clamp(320px,88vw,1080px))
-}
+        .cursor-dot {
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background-color: white;
+        }
 
-h1{
-  font-weight:900;
-  letter-spacing:-.01em;
-  line-height:.98;
-  font-size:clamp(32px,6.5vw,92px)
-}
+        .cursor-outline {
+            width: var(--cursor-outline-size);
+            height: var(--cursor-outline-size);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+        }
 
-.lead{
-  margin-top:clamp(12px,2.2vw,20px);
-  color:var(--muted);
-  max-width:62ch;
-  font-size:clamp(14px,1.6vw,20px)
-}
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(100, 200, 255, 0.1);
+            border-color: rgba(100, 200, 255, 0.5);
+            backdrop-filter: blur(2px);
+        }
+        
+        body.hovering .cursor-dot {
+            background-color: #60a5fa;
+        }
 
-.loop{
-  margin-top:clamp(16px,2.5vw,28px);
-  display:flex;gap:clamp(6px,1vw,10px);align-items:center;color:#e8fff7
-}
-.dot{
-  width:clamp(8px,1.2vw,12px);
-  height:clamp(8px,1.2vw,12px);
-  border-radius:50%;
-  background:#79ffe1;
-  box-shadow:0 0 16px rgba(121,255,225,.55)
-}
-.step{font-size:clamp(12px,1.2vw,15px);letter-spacing:.12em;text-transform:uppercase;opacity:.92}
+        /* --- Navigation --- */
+        nav {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 10;
+        }
 
-.projects{
-  margin-top:clamp(20px,3vw,40px);
-  display:flex;flex-wrap:wrap;gap:clamp(8px,1.2vw,16px);align-items:center
-}
-.projects h2{
-  font-size:clamp(11px,1.1vw,14px);
-  font-weight:600;color:var(--muted);
-  letter-spacing:.1em;text-transform:uppercase;
-  margin-bottom:clamp(4px,0.6vw,6px);
-  width:100%
-}
-.project-link{
-  color:#fff;font-weight:600;text-decoration:none;
-  padding:clamp(6px,1vw,10px) clamp(10px,1.4vw,16px);
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:999px;
-  transition:background .2s,transform .2s
-}
-.project-link:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+        .logo-img {
+            height: 70px; 
+            width: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
 
-.cta{
-  position:fixed;
-  right:calc(env(safe-area-inset-right) + clamp(12px,1.8vw,24px));
-  bottom:calc(env(safe-area-inset-bottom) + clamp(12px,1.8vw,24px));
-  z-index:4;
-  display:flex;align-items:center;gap:clamp(6px,1vw,10px);
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18);
-  backdrop-filter:blur(10px);
-  padding:clamp(10px,1.6vw,14px) clamp(14px,2vw,18px);
-  border-radius:999px;
-  text-decoration:none;color:#fff;font-weight:700;letter-spacing:.02em;
-  box-shadow:0 8px 28px rgba(0,0,0,.35);
-  touch-action:manipulation
-}
-.cta:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
-.cta:active{transform:translateY(0)}
-.arrow{width:clamp(16px,1.4vw,20px);height:clamp(16px,1.4vw,20px);display:inline-block}
-.arrow svg{width:100%;height:100%}
-@keyframes nudge{0%{transform:translateX(0)}50%{transform:translateX(6px)}100%{transform:translateX(0)}}
-.arrow svg{animation:nudge 1.6s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){
-  .bg video{transition:none}
-  .arrow svg{animation:none}
-}
+        /* --- Main Layout --- */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            padding-top: 25vh;
+            padding-bottom: 150px;
+            position: relative;
+            z-index: 1;
+        }
 
-/* Guardrails for ultra-wide and ultra-tall */
-@media (min-aspect-ratio: 21/9){
-  .shade{background:linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.58) 35%, rgba(0,0,0,.18) 65%, rgba(0,0,0,.04) 100%)}
-}
-@media (max-aspect-ratio: 9/16){
-  .wrap{padding:clamp(6vh,9vh,12vh) clamp(4vw,6vw,8vw)}
-  .stack{width:min(94vw,720px)}
-}
-</style>
+        /* --- Typography --- */
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(3.5rem, 6vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+        }
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"Organization",
-  "name":"Luxen LLC",
-  "url":"https://luxenai.org/",
-  "logo":"https://luxenai.org/logoluxen_copy-removebg-preview%20copy.png",
-  "description":"Applied AI lab building domain-specific systems that resolve workflow friction and compound reusable infrastructure.",
-  "foundingDate":"2023",
-  "sameAs":[
-    "https://nodes.luxenai.org/",
-    "https://ardus.luxenai.org/",
-    "https://kal-rho.vercel.app/"
-  ],
-  "contactPoint":[{
-    "@type":"ContactPoint",
-    "contactType":"business",
-    "availableLanguage":["en"]
-  }]
-}
-</script>
+        /* Blue Text Animation */
+        .animate-blue {
+            background: linear-gradient(90deg, #ffffff 0%, #ffffff 20%, #60a5fa 50%, #ffffff 80%, #ffffff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineBlue 4s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes shineBlue {
+            0% { background-position: 200% center; }
+            100% { background-position: 0% center; }
+        }
+
+        .subtext {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            line-height: 1.6;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;
+        }
+
+        /* --- Grid System --- */
+        .systems-header {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.6s;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 32px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Card Interactions */
+        .card:hover {
+            border-color: rgba(96, 165, 250, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .card:hover::before { opacity: 1; }
+
+        /* --- Floating CTA --- */
+        .cta-container {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 50;
+        }
+
+        .btn-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+
+        .btn-pill:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-pill svg {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-pill:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* --- Animations --- */
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            main { padding-top: 140px; padding-bottom: 120px; }
+            h1 { font-size: 3rem; }
+            .grid-container { grid-template-columns: 1fr; }
+            .cta-container { bottom: 20px; right: 20px; left: 20px; }
+            .btn-pill { justify-content: center; width: 100%; }
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
+            #cube-canvas { opacity: 0.3; }
+        }
+    </style>
 </head>
-
 <body>
-<div class="bg">
-  <video id="bg" src="133424c8-ccbf-47c3-9e12-fe390600d1ff.mp4" autoplay muted loop playsinline></video>
-</div>
 
-<div class="shade"></div>
+    <!-- Layer 1: The Orb -->
+    <canvas id="orb-canvas"></canvas>
+    
+    <!-- Layer 2: The Rotating Granulated Cube -->
+    <canvas id="cube-canvas"></canvas>
 
-<div class="logo">
-  <img src="logoluxen_copy-removebg-preview copy.png" alt="Luxen LLC logo">
-</div>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-<main class="wrap">
-  <div class="stack">
-    <h1>We’re building an applied AI lab, not a single-product company.</h1>
-    <p class="lead">Treat AI as an engineering discipline. Identify emergent friction, design domain-specific systems that resolve it, and retain reusable infrastructure from each cycle.</p>
-    <div class="loop" aria-live="polite">
-      <span class="dot" aria-hidden="true"></span>
-      <span class="step" id="step">OBSERVE FRICTION — real workflows, not speculative markets.</span>
+    <!-- Nav -->
+    <nav>
+        <img src="logoluxen_copy-removebg-preview copy.png" alt="Luxen AI" class="logo-img">
+    </nav>
+
+    <!-- Content -->
+    <main>
+        <h1>
+            We build <span class="animate-blue">applied AI</span> <br>
+            Infrastructure.
+        </h1>
+        
+        <p class="subtext">
+            Building the engineering layer for autonomous systems. 
+            Identify friction, design domain-specific resolvers, and retain reusable architecture.
+        </p>
+
+        <div class="systems-header">Current Systems</div>
+        
+        <div class="grid-container" id="card-grid">
+            <a href="https://nodes.luxenai.org" target="_blank" class="card hover-trigger">
+                <h3>Nodes</h3>
+                <p>Omegle for Silicon Valley.</p>
+            </a>
+
+            <a href="https://ardus.luxenai.org" target="_blank" class="card hover-trigger">
+                <h3>Ardus</h3>
+                <p>Common Application for Programs and Internships.</p>
+            </a>
+
+            <a href="https://kal-rho.vercel.app" target="_blank" class="card hover-trigger">
+                <h3>Kalo</h3>
+                <p>Continuous Inventory Management System.</p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Floating CTA -->
+    <div class="cta-container">
+        <a href="https://cal.com/ganstal/luxen?overlayCalendar=true" target="_blank" class="btn-pill hover-trigger">
+            Let's Talk
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
     </div>
 
-    <div class="projects">
-      <h2>Currently Working On</h2>
-      <a href="https://nodes.luxenai.org/" target="_blank" rel="noopener" class="project-link">Nodes</a>
-      <a href="https://ardus.luxenai.org/" target="_blank" rel="noopener" class="project-link">Ardus</a>
-      <a href="https://kal-rho.vercel.app/" target="_blank" rel="noopener" class="project-link">Kalo</a>
-    </div>
-  </div>
-</main>
+    <script>
+        // --- 1. Granulated Cube Engine (Larger & Optimized) ---
+        const cubeCanvas = document.getElementById('cube-canvas');
+        const ctxCube = cubeCanvas.getContext('2d');
+        
+        let cubePoints = [];
+        let cubeRotationX = 0;
+        let cubeRotationY = 0;
 
-<a class="cta" href="https://cal.com/ganstal/luxen" target="_blank" rel="noopener">
-  <span>Let’s Talk</span>
-  <span class="arrow" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M5 12h14"></path>
-      <path d="M13 5l7 7-7 7"></path>
-    </svg>
-  </span>
-</a>
+        function initCube() {
+            cubeCanvas.width = window.innerWidth;
+            cubeCanvas.height = window.innerHeight;
+            
+            // Generate Grid Points for a Cube
+            cubePoints = [];
+            const steps = 14; 
+            const stepSize = 2 / steps; 
+            
+            for(let x = -1; x <= 1; x += stepSize) {
+                for(let y = -1; y <= 1; y += stepSize) {
+                    for(let z = -1; z <= 1; z += stepSize) {
+                        const threshold = 0.05;
+                        if(Math.abs(x) > 1-threshold || Math.abs(y) > 1-threshold || Math.abs(z) > 1-threshold) {
+                            cubePoints.push({ x: x, y: y, z: z });
+                        }
+                    }
+                }
+            }
+        }
 
-<script>
-const v=document.getElementById('bg');
-const ready=()=>v.classList.add('ready');
-v.addEventListener('loadeddata',ready,{once:true});
-v.addEventListener('canplay',ready,{once:true});
+        function drawCube() {
+            ctxCube.clearRect(0, 0, cubeCanvas.width, cubeCanvas.height);
+            
+            cubeRotationX += 0.003; 
+            cubeRotationY += 0.005; 
+            
+            const cx = cubeCanvas.width * 0.80; // Position
+            const cy = cubeCanvas.height * 0.5;
+            
+            // Increased scale to occupy more space
+            const scale = 340; 
 
-const lines=[
-  "OBSERVE FRICTION — real workflows, not speculative markets.",
-  "PROTOTYPE INSTRUMENTS — minimal systems that test a concrete hypothesis.",
-  "MEASURE FAILURE — publish cracks, noise sources, calibration drifts.",
-  "RETAIN SIGNAL — extract validated modules, schemas, feedback loops.",
-  "COMPOUND INSIGHT — reapply assets to the next frontier."
-];
-const el=document.getElementById('step');
-let i=0;
-setInterval(()=>{i=(i+1)%lines.length;el.textContent=lines[i]},5200);
+            for(let i = 0; i < cubePoints.length; i++) {
+                let p = cubePoints[i];
 
-window.addEventListener('wheel',e=>e.preventDefault(),{passive:false});
-window.addEventListener('keydown',e=>{if(['PageDown','PageUp','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();});
-</script>
+                let x1 = p.x * Math.cos(cubeRotationY) - p.z * Math.sin(cubeRotationY);
+                let z1 = p.z * Math.cos(cubeRotationY) + p.x * Math.sin(cubeRotationY);
+
+                let y2 = p.y * Math.cos(cubeRotationX) - z1 * Math.sin(cubeRotationX);
+                let z2 = z1 * Math.cos(cubeRotationX) + p.y * Math.sin(cubeRotationX);
+                let x2 = x1;
+
+                let dist = 4; 
+                let zPerspective = 1 / (dist - z2);
+                
+                let screenX = cx + x2 * scale * zPerspective;
+                let screenY = cy + y2 * scale * zPerspective;
+
+                let alpha = (z2 + 1.5) / 3;
+                if(alpha < 0) alpha = 0;
+                if(alpha > 1) alpha = 1;
+
+                if(alpha > 0.05) {
+                    let size = 2.4 * zPerspective; // Slightly larger dots
+                    ctxCube.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                    ctxCube.fillRect(screenX, screenY, size, size);
+                }
+            }
+            
+            requestAnimationFrame(drawCube);
+        }
+
+        initCube();
+        drawCube();
+        window.addEventListener('resize', initCube);
+
+
+        // --- 2. Custom Cursor Logic ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger'); 
+
+        let mouseX = 0, mouseY = 0;
+        let outlineX = 0, outlineY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
+
+        function animateCursor() {
+            const speed = 0.15; 
+            outlineX += (mouseX - outlineX) * speed;
+            outlineY += (mouseY - outlineY) * speed;
+
+            cursorOutline.style.left = `${outlineX}px`;
+            cursorOutline.style.top = `${outlineY}px`;
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // Spotlight Effect
+        const gridContainer = document.getElementById('card-grid');
+        gridContainer.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.card');
+            for(const card of cards) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            }
+        });
+
+
+        // --- 3. Interactive Orb Canvas ---
+        const orbCanvas = document.getElementById('orb-canvas');
+        const ctxOrb = orbCanvas.getContext('2d');
+        
+        let width, height;
+        let orb = {
+            x: 0, y: 0, radius: 350, targetRadius: 350,
+            colorHue: 225, targetHue: 225, phase: 0,
+            targetX: 0, targetY: 0
+        };
+
+        function initOrb() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            orbCanvas.width = width;
+            orbCanvas.height = height;
+            orb.x = width / 2;
+            orb.y = height / 2;
+        }
+
+        window.addEventListener('resize', initOrb);
+        initOrb();
+
+        window.addEventListener('mousemove', (e) => {
+            orb.targetX = e.clientX;
+            orb.targetY = e.clientY;
+        });
+
+        window.addEventListener('mousedown', () => {
+            orb.targetRadius = 550; 
+            orb.targetHue = 190;
+        });
+
+        window.addEventListener('mouseup', () => {
+            orb.targetRadius = 350; 
+            orb.targetHue = 225;
+        });
+
+        function drawOrb() {
+            ctxOrb.clearRect(0, 0, width, height);
+
+            if(orb.targetX) {
+                orb.x += (orb.targetX - orb.x) * 0.04;
+                orb.y += (orb.targetY - orb.y) * 0.04;
+            }
+
+            orb.radius += (orb.targetRadius - orb.radius) * 0.1;
+            orb.colorHue += (orb.targetHue - orb.colorHue) * 0.1;
+            orb.phase += 0.015;
+            
+            const breathingRadius = orb.radius + Math.sin(orb.phase) * 25;
+
+            const gradient = ctxOrb.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, breathingRadius);
+            gradient.addColorStop(0, `hsla(${orb.colorHue}, 90%, 60%, 0.12)`);
+            gradient.addColorStop(0.4, `hsla(${orb.colorHue}, 70%, 40%, 0.04)`);
+            gradient.addColorStop(1, `hsla(${orb.colorHue}, 50%, 10%, 0)`);
+
+            ctxOrb.fillStyle = gradient;
+            ctxOrb.fillRect(0, 0, width, height);
+
+            requestAnimationFrame(drawOrb);
+        }
+        drawOrb();
+
+    </script>
 </body>
 </html>

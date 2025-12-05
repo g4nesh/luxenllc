@@ -1,1 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxen AI | Open Source</title>
+    <link rel="icon" type="image/png" href="logoluxen_copy-removebg-preview copy.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Manrope:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a20 0%, #000000 100%);
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            position: relative;
+            z-index: 10;
+        }
+
+        h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: #888;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 20px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border 0.3s;
+            cursor: none;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+            cursor: none;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            transform: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #444;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #fff;
+        }
+
+        .status-message {
+            height: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
+
+        .status-message.success {
+            color: #60a5fa;
+        }
+
+        .status-message.error {
+            color: #f87171;
+        }
+
+        /* --- System Status (Bottom Left) --- */
+        .system-status {
+            position: fixed;
+            bottom: 40px;
+            left: 5vw;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+        }
+
+        body.hovering .cursor-outline {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .system-status {
+                bottom: 30px;
+                left: 20px;
+            }
+
+            .container {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div class="container">
+        <h2>Still under development.</h2>
+        <p>The low latency agent is currently in development. Leave your email to receive access to the
+            repository once we publish.</p>
+
+        <form id="emailForm" class="hover-trigger">
+            <div class="input-group">
+                <input type="email" id="emailInput" placeholder="enter email..." required>
+                <button type="submit" id="submitBtn">Join</button>
+            </div>
+            <div id="statusMessage" class="status-message"></div>
+        </form>
+
+        <a href="index.html" class="back-link hover-trigger">← Return Home</a>
+    </div>
+
+    <div class="system-status">
+        <div class="status-dot"></div>
+        System Status: Active
+    </div>
+
+    <script>
+        // --- GOOGLE SHEETS CONNECTION ---
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycby460dLvh1b0UYnE7h_htua09sNFNsbHUiyhKvlB93Q8bLNHxH9zg9CV2bWJAGWYMOr/exec';
+
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusEl = document.getElementById('statusMessage');
+
+        function showStatus(message, isSuccess = true) {
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${isSuccess ? 'success' : 'error'} show`;
+            setTimeout(() => { statusEl.classList.remove('show'); }, 4000);
+        }
+
+        async function submitSignup(email) {
+            try {
+                await fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                        source: 'Luxen Open Source Page'
+                    })
+                });
+                return true;
+            } catch (err) {
+                console.error(err);
+                return false;
+            }
+        }
+
+        emailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (!email) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '...';
+
+            const success = await submitSignup(email);
+
+            if (success) {
+                emailInput.value = '';
+                showStatus("You're on the list.");
+                submitBtn.textContent = 'Joined';
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join';
+                }, 3000);
+            } else {
+                showStatus("Error. Please try again.", false);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join';
+            }
+        });
+
+        // --- CURSOR LOGIC ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        let mouseX = 0, mouseY = 0, outlineX = 0, outlineY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursorDot.style.left = mouseX + 'px'; cursorDot.style.top = mouseY + 'px';
+        });
+
+        function animate() {
+            outlineX += (mouseX - outlineX) * 0.2;
+            outlineY += (mouseY - outlineY) * 0.2;
+            cursorOutline.style.left = outlineX + 'px'; cursorOutline.style.top = outlineY + 'px';
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        document.querySelectorAll('.hover-trigger, button, input, a').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+    </script>
+</body>
+
+</html>

@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxen LLC | Applied AI Lab</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%23111111%22/></svg>">
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22black%22/></svg>">
+    
     <style>
-        /* Importing Inter for a clean, Silicon Valley standard aesthetic */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
         :root {
             --bg-color: #ffffff;
             --text-main: #111111;
             --text-secondary: #666666;
-            /* Very pale, creamy warm amber for the subtle background light */
             --lux-warmth: rgba(255, 220, 160, 0.25); 
+            --grid-color: rgba(0, 0, 0, 0.035);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,10 +32,17 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            -webkit-font-smoothing: antialiased; /* Crisp text rendering */
+            -webkit-font-smoothing: antialiased;
+
+            /* GRID PATTERN */
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
         }
 
-        /* --- 1. AMBIENT LIGHTING (Kept subtle) --- */
+        /* AMBIENT LIGHTING */
         .lux-source {
             position: fixed;
             width: 80vw; 
@@ -66,27 +72,39 @@
             100% { opacity: 0.8; transform: scale(1.05); }
         }
 
-        /* --- 2. LAYOUT --- */
+        /* LAYOUT */
         .container {
             position: relative;
             z-index: 2;
             max-width: 680px;
             width: 100%;
             padding: 2rem;
-            text-align: center; /* Center align header */
+            text-align: center;
         }
 
-        /* --- 3. PROFESSIONAL HEADER --- */
+        /* HEADER & LOGO */
         header {
-            margin-bottom: 3.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the logo */
+        }
+
+        /* --- THIS MAKES THE LOGO BIG ON THE PAGE --- */
+        .main-logo {
+            width: 120px; /* Adjust this number to make it bigger/smaller */
+            height: auto;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards 0s;
         }
 
         h1.brand-title {
             font-family: 'Inter', sans-serif;
-            font-weight: 800; /* Bold, solid, authoritative */
+            font-weight: 800;
             font-size: 5rem;
             color: var(--text-main);
-            letter-spacing: -0.04em; /* Tight tracking for modern look */
+            letter-spacing: -0.04em;
             margin: 0;
             line-height: 1;
             opacity: 0;
@@ -97,16 +115,16 @@
             margin-top: 1rem;
             font-size: 0.9rem;
             font-weight: 500;
-            letter-spacing: 0.15em; /* Wide spacing for elegance */
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: #888;
             opacity: 0;
             animation: fadeUp 0.8s ease-out forwards 0.4s;
         }
 
-        /* --- 4. BODY CONTENT --- */
+        /* BODY CONTENT */
         .manifesto {
-            text-align: left; /* Reading text should be left-aligned */
+            text-align: left;
             font-size: 1.125rem;
             color: var(--text-secondary);
             font-weight: 400;
@@ -131,7 +149,7 @@
             font-weight: 600;
         }
 
-        /* --- 5. THE BADGE --- */
+        /* BADGE */
         .badge-wrapper {
             opacity: 0;
             animation: fadeUp 0.8s ease-out forwards 0.9s;
@@ -169,7 +187,7 @@
             animation: pulseDot 2s infinite;
         }
 
-        /* --- 6. FOOTER --- */
+        /* FOOTER */
         footer {
             position: absolute;
             bottom: 2rem;
@@ -188,7 +206,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- ANIMATIONS --- */
+        /* ANIMATIONS */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
         @keyframes pulseDot {
@@ -202,6 +220,7 @@
             h1.brand-title { font-size: 3.5rem; }
             .container { padding: 1.5rem; }
             footer { position: relative; margin-top: 4rem; bottom: auto; }
+            .main-logo { width: 100px; } /* Slightly smaller logo on mobile */
         }
 
     </style>
@@ -214,6 +233,8 @@
     <div class="container">
         
         <header>
+            <img src="logoluxen_copy-removebg-preview copy.png" alt="Luxen Logo" class="main-logo">
+            
             <h1 class="brand-title">LUXEN</h1>
             <div class="subtitle">Applied AI Lab</div>
         </header>
@@ -221,7 +242,7 @@
         <div class="manifesto">
             <p>
                 <span class="highlight-text">Agentic Automation is the future of work.</span><br>
-                While the industry races toward generalization, we focus on specificity—creating intelligent context layers that make agents reliable, fast, and truly autonomous.
+                While the industry races toward generalization, we focus on creating intelligent context layers that make agents reliable, fast, and truly autonomous.
             </p>
             <p>
                 We operate as a startup research lab. Our systems are designed to build more capable VLA models for faster, safer, and more efficient agents that can handle complex, real-world tasks with minimal human intervention.

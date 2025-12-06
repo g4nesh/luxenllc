@@ -1,443 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxen AI | Frontier Compute</title>
-    <link rel="icon" type="image/png" href="logoluxen_copy-removebg-preview copy.png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Manrope:wght@400;600;800&display=swap"
-        rel="stylesheet">
+    <title>Luxen LLC | Applied AI Lab</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%23111111%22/></svg>">
 
     <style>
+        /* Importing Inter for a clean, Silicon Valley standard aesthetic */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
         :root {
-            --text-main: #ffffff;
-            --text-muted: #a1a1aa;
-            --accent-glow: rgba(255, 255, 255, 0.15);
-            --luxen-blue: #60a5fa;
-            --status-green: #10b981;
+            --bg-color: #ffffff;
+            --text-main: #111111;
+            --text-secondary: #666666;
+            /* Very pale, creamy warm amber for the subtle background light */
+            --lux-warmth: rgba(255, 220, 160, 0.25); 
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-            /* Custom cursor retained */
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #000;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            /* No scrolling */
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: relative;
+            -webkit-font-smoothing: antialiased; /* Crisp text rendering */
         }
 
-        /* --- Background Video Layer --- */
-        #bg-video {
+        /* --- 1. AMBIENT LIGHTING (Kept subtle) --- */
+        .lux-source {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -2;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            opacity: 0.55;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.1) 100%);
-            z-index: -1;
-            backdrop-filter: blur(2px);
-        }
-
-        /* --- Navigation --- */
-        nav {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 40px 5vw;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .logo-img {
-            height: 60px;
-            width: auto;
-            opacity: 0.9;
-            transition: opacity 0.3s ease;
-        }
-
-        .logo-img:hover {
-            opacity: 1;
-        }
-
-        .top-link {
-            font-family: 'Manrope', sans-serif;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 24px;
-            border-radius: 100px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .top-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fff;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-        }
-
-        /* --- Main Content (Left Aligned) --- */
-        main {
-            position: absolute;
-            top: 50%;
-            left: 8vw;
-            transform: translateY(-45%);
-            text-align: left;
-            z-index: 5;
-            width: auto;
-            max-width: 900px;
-        }
-
-        h1 {
-            font-family: 'Manrope', sans-serif;
-            font-size: clamp(3.5rem, 6vw, 7rem);
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -0.04em;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #FFFFFF 20%, rgba(255, 255, 255, 0.6) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: cinematicSlideUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
-        }
-
-        p.subtitle {
-            font-size: 1.35rem;
-            color: var(--text-muted);
-            max-width: 650px;
-            margin: 0;
-            font-weight: 300;
-            line-height: 1.5;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: cinematicSlideUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
-        }
-
-        .tagline-container {
-            margin-top: 40px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: cinematicSlideUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s;
-        }
-
-        .tagline {
-            display: inline-block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--luxen-blue);
-            padding: 12px 24px;
-            border-radius: 6px;
-            background: rgba(96, 165, 250, 0.08);
-            border: 1px solid rgba(96, 165, 250, 0.3);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .tagline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        .tagline:hover {
-            border-color: var(--luxen-blue);
-            background: rgba(96, 165, 250, 0.15);
-            box-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
-        }
-
-        /* --- Footer Elements --- */
-        .bottom-right {
-            position: fixed;
-            bottom: 40px;
-            right: 5vw;
-            z-index: 10;
-        }
-
-        .contact-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            text-decoration: none;
-            font-family: 'Manrope', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards 1.2s;
-            transition: all 0.3s ease;
-        }
-
-        .contact-btn:hover {
-            opacity: 1;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .contact-btn::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 1px;
-            background: #fff;
-            transition: width 0.3s ease;
-        }
-
-        .contact-btn:hover::after {
-            width: 60px;
-            background: var(--luxen-blue);
-        }
-
-        /* --- System Status (Bottom Left) --- */
-        .system-status {
-            position: fixed;
-            bottom: 40px;
-            left: 5vw;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards 1.4s;
+            width: 80vw; 
+            height: 80vw;
             pointer-events: none;
+            z-index: 0; 
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: breatheLight 12s ease-in-out infinite alternate;
+        }
+
+        .source-tr {
+            top: -40%;
+            right: -40%;
+            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 60%);
+        }
+
+        .source-bl {
+            bottom: -40%;
+            left: -40%;
+            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 60%);
+            animation-delay: -6s;
+        }
+
+        @keyframes breatheLight {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 680px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center; /* Center align header */
+        }
+
+        /* --- 3. PROFESSIONAL HEADER --- */
+        header {
+            margin-bottom: 3.5rem;
+        }
+
+        h1.brand-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800; /* Bold, solid, authoritative */
+            font-size: 5rem;
+            color: var(--text-main);
+            letter-spacing: -0.04em; /* Tight tracking for modern look */
+            margin: 0;
+            line-height: 1;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards 0.2s;
+        }
+
+        .subtitle {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.15em; /* Wide spacing for elegance */
+            text-transform: uppercase;
+            color: #888;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards 0.4s;
+        }
+
+        /* --- 4. BODY CONTENT --- */
+        .manifesto {
+            text-align: left; /* Reading text should be left-aligned */
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 3.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .manifesto p {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        .manifesto p:nth-child(1) { animation-delay: 0.5s; }
+        .manifesto p:nth-child(2) { animation-delay: 0.7s; }
+
+        .highlight-text {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* --- 5. THE BADGE --- */
+        .badge-wrapper {
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards 0.9s;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid #eaeaea;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .badge:hover {
+            border-color: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .status-dot {
             width: 6px;
             height: 6px;
-            background-color: var(--status-green);
+            background: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--status-green);
-            animation: pulse 2s infinite;
+            margin-right: 10px;
+            box-shadow: 0 0 0 rgba(34, 197, 94, 0.4);
+            animation: pulseDot 2s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            }
-
-            70% {
-                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-            }
+        /* --- 6. FOOTER --- */
+        footer {
+            position: absolute;
+            bottom: 2rem;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #aaa;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 1.2s;
         }
 
-        /* --- Custom Cursor --- */
-        .cursor-dot,
-        .cursor-outline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
+        .legal-name {
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: white;
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
 
-        .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        /* Mobile Adjustments */
+        @media(max-width: 600px) {
+            h1.brand-title { font-size: 3.5rem; }
+            .container { padding: 1.5rem; }
+            footer { position: relative; margin-top: 4rem; bottom: auto; }
         }
 
-        body.hovering .cursor-outline {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* --- Animations --- */
-        @keyframes cinematicSlideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-
-            50% {
-                left: 100%;
-            }
-
-            100% {
-                left: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3.5rem;
-            }
-
-            main {
-                left: 5vw;
-                width: 90%;
-                transform: translateY(-50%);
-            }
-
-            nav {
-                padding: 30px 5vw;
-            }
-
-            .bottom-right {
-                bottom: 30px;
-                right: 20px;
-            }
-
-            .system-status {
-                bottom: 30px;
-                left: 20px;
-            }
-
-            .cursor-dot,
-            .cursor-outline {
-                display: none;
-            }
-
-            body {
-                cursor: auto;
-            }
-        }
     </style>
 </head>
-
 <body>
 
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="bg.mp4" type="video/mp4">
-    </video>
+    <div class="lux-source source-tr"></div>
+    <div class="lux-source source-bl"></div>
 
-    <div class="overlay"></div>
+    <div class="container">
+        
+        <header>
+            <h1 class="brand-title">LUXEN</h1>
+            <div class="subtitle">Applied AI Lab</div>
+        </header>
 
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    <nav>
-        <img src="logoluxen_copy-removebg-preview copy.png" alt="Luxen" class="logo-img hover-trigger">
-        <a href="opensource.html" class="top-link hover-trigger">Open Source</a>
-    </nav>
-
-    <main>
-        <h1>Frontier Computer Use.</h1>
-        <p class="subtitle">
-            We are building the next generation of action-based vision models.
-            Solving the latency of agency.
-        </p>
-        <div class="tagline-container">
-            <div class="tagline hover-trigger">Launching 2026</div>
+        <div class="manifesto">
+            <p>
+                <span class="highlight-text">Agentic Automation is the future of work.</span><br>
+                While the industry races toward generalization, we focus on specificity—creating intelligent context layers that make agents reliable, fast, and truly autonomous.
+            </p>
+            <p>
+                We operate as a startup research lab. Our systems are designed to build more capable VLA models for faster, safer, and more efficient agents that can handle complex, real-world tasks with minimal human intervention.
+            </p>
         </div>
-    </main>
 
-    <div class="system-status">
-        <div class="status-dot"></div>
-        System Status: Active
+        <div class="badge-wrapper">
+            <a href="https://farse.luxenai.org" class="badge">
+                <div class="status-dot"></div>
+                Currently Building: &nbsp;<strong>Farse &rarr;</strong>
+            </a>
+        </div>
+
     </div>
 
-    <div class="bottom-right">
-        <a href="https://cal.com/ganstal/luxen?overlayCalendar=true" target="_blank" class="contact-btn hover-trigger">
-            Contact Us
-        </a>
-    </div>
-
-    <script>
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
-        const triggers = document.querySelectorAll('.hover-trigger');
-
-        let mouseX = 0, mouseY = 0;
-        let outlineX = 0, outlineY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            cursorDot.style.left = `${mouseX}px`; cursorDot.style.top = `${mouseY}px`;
-        });
-
-        function animateCursor() {
-            let speed = 0.2;
-            outlineX += (mouseX - outlineX) * speed;
-            outlineY += (mouseY - outlineY) * speed;
-            cursorOutline.style.left = `${outlineX}px`; cursorOutline.style.top = `${outlineY}px`;
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        triggers.forEach(t => {
-            t.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            t.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-        });
-    </script>
+    <footer>
+        <span class="legal-name">Luxen LLC</span> <br>
+        &copy; 2025 All Rights Reserved.
+    </footer>
 
 </body>
-
 </html>

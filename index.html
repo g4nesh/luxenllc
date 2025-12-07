@@ -14,7 +14,7 @@
             --bg-color: #ffffff;
             --text-main: #111111;
             --text-secondary: #666666;
-            --lux-warmth: rgba(255, 220, 160, 0.25); 
+            --lux-warmth: rgba(255, 220, 160, 0.2); 
             --grid-color: rgba(0, 0, 0, 0.035);
         }
 
@@ -34,48 +34,56 @@
             position: relative;
             -webkit-font-smoothing: antialiased;
 
-            /* GRID PATTERN */
+            /* STATIC GRID BASE */
             background-image: 
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 40px 40px;
-            background-position: center top;
         }
 
-        /* AMBIENT LIGHTING */
+        /* DYNAMIC CANVAS LAYER (The Particles) */
+        #network-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind content */
+            pointer-events: none;
+        }
+
+        /* AMBIENT LIGHTING (Kept very subtle) */
         .lux-source {
             position: fixed;
-            width: 80vw; 
-            height: 80vw;
+            width: 70vw; 
+            height: 70vw;
             pointer-events: none;
-            z-index: 0; 
-            filter: blur(120px);
-            opacity: 0.6;
-            animation: breatheLight 12s ease-in-out infinite alternate;
+            z-index: -1; /* Behind canvas */
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: breatheLight 10s ease-in-out infinite alternate;
         }
 
         .source-tr {
-            top: -40%;
-            right: -40%;
-            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 60%);
+            top: -30%; right: -30%;
+            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 70%);
         }
 
         .source-bl {
-            bottom: -40%;
-            left: -40%;
-            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 60%);
-            animation-delay: -6s;
+            bottom: -30%; left: -30%;
+            background: radial-gradient(circle, var(--lux-warmth) 0%, transparent 70%);
+            animation-delay: -5s;
         }
 
         @keyframes breatheLight {
-            0% { opacity: 0.5; transform: scale(1); }
-            100% { opacity: 0.8; transform: scale(1.05); }
+            0% { opacity: 0.4; transform: scale(1); }
+            100% { opacity: 0.7; transform: scale(1.05); }
         }
 
-        /* LAYOUT */
+        /* LAYOUT - Content sits on top of canvas */
         .container {
             position: relative;
-            z-index: 2;
+            z-index: 2; 
             max-width: 680px;
             width: 100%;
             padding: 2rem;
@@ -87,12 +95,11 @@
             margin-bottom: 3rem;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center the logo */
+            align-items: center;
         }
 
-        /* --- THIS MAKES THE LOGO BIG ON THE PAGE --- */
         .main-logo {
-            width: 120px; /* Adjust this number to make it bigger/smaller */
+            width: 120px;
             height: auto;
             margin-bottom: 1.5rem;
             opacity: 0;
@@ -159,7 +166,7 @@
         .badge {
             display: inline-flex;
             align-items: center;
-            background: #fff;
+            background: rgba(255,255,255,0.8);
             padding: 10px 20px;
             border-radius: 50px;
             border: 1px solid #eaeaea;
@@ -169,6 +176,7 @@
             font-weight: 600;
             transition: all 0.2s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            backdrop-filter: blur(2px);
         }
 
         .badge:hover {
@@ -197,6 +205,7 @@
             color: #aaa;
             opacity: 0;
             animation: fadeIn 1s ease forwards 1.2s;
+            z-index: 2;
         }
 
         .legal-name {
@@ -206,7 +215,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* ANIMATIONS */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
         @keyframes pulseDot {
@@ -215,17 +223,18 @@
             100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
 
-        /* Mobile Adjustments */
         @media(max-width: 600px) {
             h1.brand-title { font-size: 3.5rem; }
             .container { padding: 1.5rem; }
             footer { position: relative; margin-top: 4rem; bottom: auto; }
-            .main-logo { width: 100px; } /* Slightly smaller logo on mobile */
+            .main-logo { width: 100px; }
         }
 
     </style>
 </head>
 <body>
+
+    <canvas id="network-canvas"></canvas>
 
     <div class="lux-source source-tr"></div>
     <div class="lux-source source-bl"></div>
@@ -262,6 +271,99 @@
         <span class="legal-name">Luxen LLC</span> <br>
         &copy; 2025 All Rights Reserved.
     </footer>
+
+    <script>
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        
+        // Configuration for the "Subtle Nuance"
+        const config = {
+            particleCount: 60,         // Not too many, keeps it clean
+            connectionDistance: 120,   // How close to draw a line
+            speed: 0.3,                // Very slow movement
+            color: 'rgba(0, 0, 0, 0.4)',  // Dot color
+            lineColor: 'rgba(0, 0, 0, 0.08)' // Very faint line color
+        };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                // Random velocity
+                this.vx = (Math.random() - 0.5) * config.speed;
+                this.vy = (Math.random() - 0.5) * config.speed;
+                this.size = Math.random() * 1.5 + 0.5; // Random size between 0.5 and 2
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = config.color;
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        function init() {
+            particles = [];
+            // Calculate particles based on screen size (fewer on mobile)
+            const count = window.innerWidth < 600 ? 30 : config.particleCount;
+            
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                // Draw connections
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < config.connectionDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = config.lineColor;
+                        ctx.lineWidth = 0.5; // Very thin lines
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
 
 </body>
 </html>

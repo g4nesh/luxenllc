@@ -151,27 +151,30 @@ code {
 }
 
 .home-page__stage {
-  min-height: min(54svh, 460px);
+  min-height: min(70svh, 620px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: clamp(0.2rem, 2vw, 1.4rem);
+  padding-left: 0;
+  overflow: visible;
 }
 
 .luxen-hero {
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
 .luxen-hero--home {
-  width: min(34vw, 364px);
-  height: min(48svh, 392px);
+  width: min(42vw, 470px);
+  height: min(70svh, 620px);
   max-width: 100%;
 }
 
 .luxen-hero__canvas {
   width: 100%;
   height: 100%;
+  overflow: visible;
   touch-action: none;
   cursor: grab;
 }
@@ -698,13 +701,13 @@ code {
   }
 
   .home-page__stage {
-    min-height: 38svh;
+    min-height: 46svh;
     padding-left: 0;
   }
 
   .luxen-hero--home {
-    width: min(52vw, 300px);
-    height: min(34svh, 300px);
+    width: min(58vw, 380px);
+    height: min(46svh, 420px);
   }
 
   .luxen-hero__poster-image {
@@ -741,12 +744,12 @@ code {
   }
 
   .home-page__stage {
-    min-height: 30svh;
+    min-height: 38svh;
   }
 
   .luxen-hero--home {
-    width: min(48vw, 224px);
-    height: min(28svh, 240px);
+    width: min(62vw, 290px);
+    height: min(38svh, 330px);
   }
 
   .home-page__content h1 {

@@ -2,9 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Center, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
-import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
 type HeroMode = "idle" | "dragging" | "settling";
 
@@ -19,96 +17,165 @@ type DragState = {
   lastX: number;
   lastY: number;
   lastMoveAt: number;
-  userYaw: number;
-  userPitch: number;
   yawVelocity: number;
   pitchVelocity: number;
-  releaseAt: number;
-  spinYaw: number;
-  frozenPitchBase: number;
-  frozenRollBase: number;
+  orientation: THREE.Quaternion;
 };
 
-function LuxenMarkMeshes() {
-  const svg = useLoader(SVGLoader, "/branding/luxen-mark.svg");
+const MARK_BOUNDS = {
+  width: 104 / 500,
+  height: 188 / 500,
+  x: 197 / 500,
+  y: 156 / 500
+};
 
-  const { geometries, materials } = useMemo(() => {
-    const nextGeometries: THREE.ExtrudeGeometry[] = [];
-    const palette = [
-      "#43dcf8",
-      "#47d4f9",
-      "#50c5fb",
-      "#5aaeff",
-      "#648eff",
-      "#6c74ff",
-      "#668dff",
-      "#8469ff",
-      "#d24cf7"
-    ];
+const MARK_ASPECT = 104 / 188;
+const MARK_HEIGHT = 4.36;
+const MARK_WIDTH = MARK_HEIGHT * MARK_ASPECT;
+const DEPTH_LAYERS = [-0.1, -0.065, -0.03, 0.03, 0.065];
+const WORLD_Y = new THREE.Vector3(0, 1, 0);
+const LOCAL_X = new THREE.Vector3(1, 0, 0);
+const TEMP_WORLD_ROTATION = new THREE.Quaternion();
+const TEMP_LOCAL_ROTATION = new THREE.Quaternion();
 
-    const nextMaterials = palette.map((hex) => {
-      const faceColor = new THREE.Color(hex);
-      const sideColor = faceColor.clone().multiplyScalar(0.48);
+function createDefaultOrientation() {
+  return new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.12, 0.34, -0.02));
+}
 
-      return [
-        new THREE.MeshPhysicalMaterial({
-          color: faceColor,
-          roughness: 0.28,
-          metalness: 0.1,
-          clearcoat: 0.45,
-          clearcoatRoughness: 0.12,
-          reflectivity: 0.42,
-          emissive: faceColor.clone().multiplyScalar(0.1),
-          side: THREE.DoubleSide
-        }),
-        new THREE.MeshStandardMaterial({
-          color: sideColor,
-          roughness: 0.68,
-          metalness: 0.02,
-          side: THREE.DoubleSide
-        })
-      ] as THREE.Material[];
-    });
+function applyWorldRotation(target: THREE.Quaternion, angle: number, axis: THREE.Vector3) {
+  TEMP_WORLD_ROTATION.setFromAxisAngle(axis, angle);
+  target.premultiply(TEMP_WORLD_ROTATION).normalize();
+}
 
-    svg.paths.forEach((path) => {
-      SVGLoader.createShapes(path).forEach((shape) => {
-        nextGeometries.push(
-          new THREE.ExtrudeGeometry(shape, {
-            depth: 5,
-            curveSegments: 10,
-            bevelEnabled: true,
-            bevelThickness: 0.34,
-            bevelSize: 0.34,
-            bevelSegments: 2
-          })
-        );
-      });
-    });
+function applyLocalRotation(target: THREE.Quaternion, angle: number, axis: THREE.Vector3) {
+  TEMP_LOCAL_ROTATION.setFromAxisAngle(axis, angle);
+  target.multiply(TEMP_LOCAL_ROTATION).normalize();
+}
 
-    return { geometries: nextGeometries, materials: nextMaterials };
-  }, [svg.paths]);
+function CroppedMark({ reducedMotion }: { reducedMotion: boolean }) {
+  const texture = useLoader(THREE.TextureLoader, "/branding/luxen-mark.png");
+  const { gl } = useThree();
+
+  const croppedTexture = useMemo(() => {
+    const next = texture.clone();
+    next.colorSpace = THREE.SRGBColorSpace;
+    next.wrapS = THREE.ClampToEdgeWrapping;
+    next.wrapT = THREE.ClampToEdgeWrapping;
+    next.repeat.set(MARK_BOUNDS.width, MARK_BOUNDS.height);
+    next.offset.set(MARK_BOUNDS.x, 1 - MARK_BOUNDS.y - MARK_BOUNDS.height);
+    next.needsUpdate = true;
+    return next;
+  }, [texture]);
+
+  const plane = useMemo(() => new THREE.PlaneGeometry(MARK_WIDTH, MARK_HEIGHT), []);
+  const shadowPlane = useMemo(() => new THREE.PlaneGeometry(MARK_WIDTH * 1.04, MARK_HEIGHT * 1.04), []);
+
+  const anisotropy = gl.capabilities.getMaxAnisotropy();
+
+  useEffect(() => {
+    croppedTexture.anisotropy = Math.min(8, anisotropy);
+    croppedTexture.needsUpdate = true;
+  }, [anisotropy, croppedTexture]);
+
+  const frontMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        map: croppedTexture,
+        alphaMap: croppedTexture,
+        transparent: true,
+        alphaTest: 0.08,
+        depthWrite: false,
+        roughness: 0.22,
+        metalness: 0.04,
+        clearcoat: 0.38,
+        clearcoatRoughness: 0.22,
+        emissive: new THREE.Color("#0b1220"),
+        emissiveIntensity: reducedMotion ? 0.02 : 0.04,
+        side: THREE.FrontSide
+      }),
+    [croppedTexture, reducedMotion]
+  );
+
+  const backMaterial = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        map: croppedTexture,
+        alphaMap: croppedTexture,
+        transparent: true,
+        alphaTest: 0.08,
+        depthWrite: false,
+        roughness: 0.42,
+        metalness: 0.03,
+        clearcoat: 0.18,
+        clearcoatRoughness: 0.45,
+        opacity: 0.88,
+        color: new THREE.Color("#dce6ff"),
+        emissive: new THREE.Color("#0a0f1b"),
+        emissiveIntensity: 0.02,
+        side: THREE.FrontSide
+      }),
+    [croppedTexture]
+  );
+
+  const depthMaterial = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        map: croppedTexture,
+        alphaMap: croppedTexture,
+        transparent: true,
+        alphaTest: 0.08,
+        depthWrite: false,
+        opacity: 0.24,
+        color: new THREE.Color("#27324a"),
+        side: THREE.DoubleSide
+      }),
+    [croppedTexture]
+  );
+
+  const glowMaterial = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        map: croppedTexture,
+        alphaMap: croppedTexture,
+        transparent: true,
+        depthWrite: false,
+        opacity: reducedMotion ? 0.04 : 0.075,
+        color: new THREE.Color("#7d95ff"),
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide
+      }),
+    [croppedTexture, reducedMotion]
+  );
 
   useEffect(() => {
     return () => {
-      geometries.forEach((geometry) => geometry.dispose());
-      materials.flat().forEach((material) => material.dispose());
+      plane.dispose();
+      shadowPlane.dispose();
+      croppedTexture.dispose();
+      frontMaterial.dispose();
+      backMaterial.dispose();
+      depthMaterial.dispose();
+      glowMaterial.dispose();
     };
-  }, [geometries, materials]);
+  }, [backMaterial, croppedTexture, depthMaterial, frontMaterial, glowMaterial, plane, shadowPlane]);
 
   return (
-    <Center>
-      <group scale={[0.0161, -0.0161, 0.0161]}>
-        {geometries.map((geometry, index) => (
-          <mesh
-            key={index}
-            castShadow
-            receiveShadow
-            geometry={geometry}
-            material={materials[index] ?? materials[materials.length - 1]}
-          />
-        ))}
-      </group>
-    </Center>
+    <group position={[-0.22, 0.08, 0]}>
+      <mesh geometry={shadowPlane} material={glowMaterial} position={[0, -0.02, -0.2]} renderOrder={0} />
+
+      {DEPTH_LAYERS.map((z, index) => (
+        <mesh
+          key={z}
+          geometry={plane}
+          material={depthMaterial}
+          position={[0, 0, z]}
+          renderOrder={1 + index}
+        />
+      ))}
+
+      <mesh geometry={plane} material={backMaterial} position={[0, 0, -0.11]} rotation={[0, Math.PI, 0]} renderOrder={8} />
+      <mesh geometry={plane} material={frontMaterial} position={[0, 0, 0.11]} renderOrder={9} />
+    </group>
   );
 }
 
@@ -120,12 +187,9 @@ type SceneRigProps = {
 
 function SceneRig({ mode, reducedMotion, dragStateRef }: SceneRigProps) {
   const markRef = useRef<THREE.Group | null>(null);
-  const previousModeRef = useRef<HeroMode>("idle");
-  const frozenPosition = useMemo(() => new THREE.Vector3(), []);
-  const idlePosition = useMemo(() => new THREE.Vector3(), []);
   const { camera } = useThree();
-
-  const defaultCamera = useMemo(() => new THREE.Vector3(0, 0.08, 7.55), []);
+  const idleSpin = reducedMotion ? 0 : 0.28;
+  const defaultCamera = useMemo(() => new THREE.Vector3(0, 0.1, 8.7), []);
 
   useEffect(() => {
     camera.position.copy(defaultCamera);
@@ -138,105 +202,34 @@ function SceneRig({ mode, reducedMotion, dragStateRef }: SceneRigProps) {
     }
 
     const dragState = dragStateRef.current;
-    const cycle = state.clock.getElapsedTime();
-    const idlePitchBase = reducedMotion ? 0.048 : 0.055 + 0.012 * Math.sin(cycle * 0.42);
-    const idleRollBase = reducedMotion ? -0.016 : -0.015 + 0.008 * Math.cos(cycle * 0.38);
 
-    if (reducedMotion) {
-      idlePosition.set(-0.02, 0, 0);
-    } else {
-      idlePosition.set(-0.02, 0.006 * Math.sin(cycle * 0.55), 0);
+    if (mode === "settling") {
+      applyWorldRotation(dragState.orientation, (idleSpin + dragState.yawVelocity) * delta, WORLD_Y);
+      applyLocalRotation(dragState.orientation, dragState.pitchVelocity * delta, LOCAL_X);
+      dragState.yawVelocity *= Math.exp(-3.6 * delta);
+      dragState.pitchVelocity *= Math.exp(-4.2 * delta);
+    } else if (mode === "idle" && !reducedMotion) {
+      applyWorldRotation(dragState.orientation, idleSpin * delta, WORLD_Y);
+      applyLocalRotation(dragState.orientation, 0.016 * Math.sin(state.clock.elapsedTime * 0.75) * delta, LOCAL_X);
     }
 
-    if (mode === "dragging" && previousModeRef.current !== "dragging") {
-      frozenPosition.copy(mark.position);
-      dragState.frozenPitchBase = idlePitchBase;
-      dragState.frozenRollBase = idleRollBase;
-    }
-
-    if (mode === "dragging") {
-      dragState.yawVelocity = THREE.MathUtils.lerp(dragState.yawVelocity, 0, Math.min(0.28, delta * 10));
-      dragState.pitchVelocity = THREE.MathUtils.lerp(dragState.pitchVelocity, 0, Math.min(0.28, delta * 10));
-    } else if (mode === "settling") {
-      dragState.spinYaw += delta * 0.18;
-      dragState.userYaw += dragState.yawVelocity;
-      dragState.userPitch = THREE.MathUtils.clamp(dragState.userPitch + dragState.pitchVelocity, -0.72, 0.72);
-      dragState.yawVelocity *= Math.pow(0.9, delta * 60);
-      dragState.pitchVelocity *= Math.pow(0.88, delta * 60);
-    } else {
-      dragState.spinYaw += delta * 0.18;
-      dragState.yawVelocity = THREE.MathUtils.lerp(dragState.yawVelocity, 0, Math.min(0.12, delta * 4));
-      dragState.pitchVelocity = THREE.MathUtils.lerp(dragState.pitchVelocity, 0, Math.min(0.12, delta * 4));
-    }
-
-    const targetPosition = mode === "idle" ? idlePosition : frozenPosition;
-    const positionBlend = mode === "dragging" ? Math.min(0.26, delta * 12) : Math.min(0.1, delta * 4);
-
-    mark.position.lerp(targetPosition, positionBlend);
-
-    if (mode === "idle") {
-      mark.rotation.x = THREE.MathUtils.lerp(
-        mark.rotation.x,
-        idlePitchBase + dragState.userPitch,
-        Math.min(0.08, delta * 4)
-      );
-      mark.rotation.y = THREE.MathUtils.lerp(
-        mark.rotation.y,
-        0.14 + dragState.spinYaw + dragState.userYaw,
-        Math.min(0.08, delta * 4)
-      );
-      mark.rotation.z = THREE.MathUtils.lerp(
-        mark.rotation.z,
-        idleRollBase - dragState.userYaw * 0.035,
-        Math.min(0.08, delta * 4)
-      );
-    } else {
-      const targetX = dragState.frozenPitchBase + dragState.userPitch;
-      const targetY = 0.14 + dragState.spinYaw + dragState.userYaw;
-      const targetZ = dragState.frozenRollBase - dragState.userYaw * 0.035;
-      if (mode === "dragging") {
-        mark.rotation.x = targetX;
-        mark.rotation.y = targetY;
-        mark.rotation.z = targetZ;
-      } else {
-        const response = Math.min(0.16, delta * 7);
-        mark.rotation.x = THREE.MathUtils.lerp(mark.rotation.x, targetX, response);
-        mark.rotation.y = THREE.MathUtils.lerp(mark.rotation.y, targetY, response);
-        mark.rotation.z = THREE.MathUtils.lerp(mark.rotation.z, targetZ, response);
-      }
-    }
-
-    if (mode === "settling" && Math.abs(dragState.yawVelocity) < 0.0003 && Math.abs(dragState.pitchVelocity) < 0.0003) {
-      dragState.yawVelocity = 0;
-      dragState.pitchVelocity = 0;
-    }
-
-    camera.position.lerp(defaultCamera, Math.min(0.08, delta * 2.8));
-    previousModeRef.current = mode;
+    mark.quaternion.copy(dragState.orientation);
+    camera.position.lerp(defaultCamera, Math.min(0.1, delta * 3));
   });
 
   return (
     <>
-      <ambientLight intensity={1.18} color="#fbfcff" />
-      <directionalLight castShadow intensity={1.7} position={[3.3, 4.2, 7.4]} color="#ffffff" />
-      <pointLight intensity={8.8} distance={11} color="#49def9" position={[-3.2, 1.8, 5.2]} />
-      <pointLight intensity={7.4} distance={11} color="#d347ff" position={[3.9, -1.1, 5.1]} />
-      <spotLight intensity={4.4} color="#96abd7" position={[0, 6.8, 8.4]} angle={0.42} penumbra={1} />
+      <ambientLight intensity={1.15} color="#ffffff" />
+      <directionalLight intensity={2.1} color="#ffffff" position={[2.8, 3.6, 7.8]} />
+      <pointLight intensity={5.2} distance={11} color="#4adcf8" position={[-2.8, 1.2, 4.8]} />
+      <pointLight intensity={4.3} distance={10} color="#d347ff" position={[2.6, -1.1, 4.4]} />
+      <pointLight intensity={1.3} distance={10} color="#8ea2ff" position={[0.4, 2.8, 4.5]} />
 
       <group ref={markRef}>
         <Suspense fallback={null}>
-          <LuxenMarkMeshes />
+          <CroppedMark reducedMotion={reducedMotion} />
         </Suspense>
       </group>
-
-      <ContactShadows
-        position={[0, -2.2, 0]}
-        opacity={0.18}
-        scale={6.6}
-        blur={2.5}
-        far={3.6}
-        color="#74839a"
-      />
     </>
   );
 }
@@ -252,37 +245,34 @@ export function LuxenMarkStage({
     lastX: 0,
     lastY: 0,
     lastMoveAt: 0,
-    userYaw: 0,
-    userPitch: 0,
     yawVelocity: 0,
     pitchVelocity: 0,
-    releaseAt: 0,
-    spinYaw: 0,
-    frozenPitchBase: 0.055,
-    frozenRollBase: -0.015
+    orientation: createDefaultOrientation()
   });
-  const returnTimeoutRef = useRef<number | null>(null);
+  const settleTimerRef = useRef<number | null>(null);
 
-  const clearReturnTimer = () => {
-    if (returnTimeoutRef.current !== null) {
-      window.clearTimeout(returnTimeoutRef.current);
-      returnTimeoutRef.current = null;
+  const clearSettleTimer = () => {
+    if (settleTimerRef.current !== null) {
+      window.clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = null;
     }
   };
 
-  const settleBack = () => {
-    clearReturnTimer();
+  const enterIdle = () => {
+    clearSettleTimer();
+    settleTimerRef.current = window.setTimeout(() => setMode("idle"), 950);
+  };
+
+  const finishDrag = () => {
+    clearSettleTimer();
     dragStateRef.current.pointerId = null;
-    dragStateRef.current.releaseAt = performance.now();
     setMode("settling");
     onInteractionChange?.(false);
-    returnTimeoutRef.current = window.setTimeout(() => {
-      setMode("idle");
-    }, 1800);
+    enterIdle();
   };
 
   useEffect(() => {
-    return () => clearReturnTimer();
+    return () => clearSettleTimer();
   }, []);
 
   return (
@@ -294,13 +284,14 @@ export function LuxenMarkStage({
           return;
         }
 
-        clearReturnTimer();
-        dragStateRef.current.pointerId = event.pointerId;
-        dragStateRef.current.lastX = event.clientX;
-        dragStateRef.current.lastY = event.clientY;
-        dragStateRef.current.lastMoveAt = performance.now();
-        dragStateRef.current.yawVelocity = 0;
-        dragStateRef.current.pitchVelocity = 0;
+        clearSettleTimer();
+        const dragState = dragStateRef.current;
+        dragState.pointerId = event.pointerId;
+        dragState.lastX = event.clientX;
+        dragState.lastY = event.clientY;
+        dragState.lastMoveAt = performance.now();
+        dragState.yawVelocity = 0;
+        dragState.pitchVelocity = 0;
         event.currentTarget.setPointerCapture(event.pointerId);
         setMode("dragging");
         onInteractionChange?.(true);
@@ -314,14 +305,16 @@ export function LuxenMarkStage({
         const deltaX = event.clientX - dragState.lastX;
         const deltaY = event.clientY - dragState.lastY;
         const now = performance.now();
-        const dt = Math.max(8, now - dragState.lastMoveAt);
+        const dt = Math.max(16, now - dragState.lastMoveAt) / 1000;
         dragState.lastX = event.clientX;
         dragState.lastY = event.clientY;
         dragState.lastMoveAt = now;
-        dragState.userYaw += deltaX * 0.0062;
-        dragState.userPitch = THREE.MathUtils.clamp(dragState.userPitch + deltaY * 0.0048, -0.72, 0.72);
-        dragState.yawVelocity = (deltaX * 0.001) / dt * 16;
-        dragState.pitchVelocity = (deltaY * 0.0008) / dt * 16;
+
+        applyWorldRotation(dragState.orientation, deltaX * 0.0105, WORLD_Y);
+        applyLocalRotation(dragState.orientation, deltaY * 0.0092, LOCAL_X);
+
+        dragState.yawVelocity = THREE.MathUtils.clamp((deltaX * 0.0105) / dt, -1.75, 1.75);
+        dragState.pitchVelocity = THREE.MathUtils.clamp((deltaY * 0.0092) / dt, -1.35, 1.35);
       }}
       onPointerUp={(event) => {
         const dragState = dragStateRef.current;
@@ -333,7 +326,7 @@ export function LuxenMarkStage({
           event.currentTarget.releasePointerCapture(event.pointerId);
         }
 
-        settleBack();
+        finishDrag();
       }}
       onPointerCancel={(event) => {
         const dragState = dragStateRef.current;
@@ -341,20 +334,19 @@ export function LuxenMarkStage({
           return;
         }
 
-        settleBack();
+        finishDrag();
       }}
       onLostPointerCapture={() => {
         if (mode === "dragging") {
-          settleBack();
+          finishDrag();
         }
       }}
       onContextMenu={(event) => event.preventDefault()}
       role="presentation"
     >
       <Canvas
-        shadows
-        dpr={[1, 1.75]}
-        camera={{ position: [0, 0.12, 7.2], fov: 26 }}
+        dpr={[1, 2]}
+        camera={{ position: [0, 0.1, 8.7], fov: 28 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <SceneRig mode={mode} reducedMotion={reducedMotion} dragStateRef={dragStateRef} />

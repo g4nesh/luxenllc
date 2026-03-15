@@ -1,0 +1,26 @@
+<svg width="240" height="320" viewBox="0 0 240 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="luxenA" x1="34" y1="24" x2="136" y2="154" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#49DEF9" />
+      <stop offset="0.55" stop-color="#5AA9FF" />
+      <stop offset="1" stop-color="#7D8CFF" />
+    </linearGradient>
+    <linearGradient id="luxenB" x1="100" y1="74" x2="192" y2="286" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7D8CFF" />
+      <stop offset="0.58" stop-color="#A05FFF" />
+      <stop offset="1" stop-color="#D347FF" />
+    </linearGradient>
+  </defs>
+
+  <polygon points="70,40 98,22 116,34 88,54" fill="url(#luxenA)" />
+  <polygon points="54,78 98,48 116,60 72,90" fill="url(#luxenA)" />
+  <polygon points="54,116 98,86 116,98 72,128" fill="url(#luxenA)" />
+  <polygon points="54,154 98,124 116,136 72,166" fill="url(#luxenA)" />
+
+  <polygon points="116,36 142,54 142,194 116,212" fill="url(#luxenB)" />
+  <polygon points="116,132 142,114 142,154 116,172" fill="url(#luxenB)" />
+
+  <polygon points="102,186 156,148 174,160 120,198" fill="url(#luxenB)" />
+  <polygon points="98,228 156,188 174,200 116,240" fill="url(#luxenB)" />
+  <polygon points="110,270 156,236 174,248 128,282" fill="url(#luxenB)" />
+</svg>

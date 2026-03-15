@@ -32,7 +32,7 @@ const MARK_BOUNDS = {
 const MARK_ASPECT = 104 / 188;
 const MARK_HEIGHT = 4.36;
 const MARK_WIDTH = MARK_HEIGHT * MARK_ASPECT;
-const DEPTH_LAYERS = [-0.1, -0.065, -0.03, 0.03, 0.065];
+const DEPTH_LAYERS = [-0.08, -0.045, -0.02];
 const WORLD_Y = new THREE.Vector3(0, 1, 0);
 const LOCAL_X = new THREE.Vector3(1, 0, 0);
 const TEMP_WORLD_ROTATION = new THREE.Quaternion();
@@ -79,42 +79,32 @@ function CroppedMark({ reducedMotion }: { reducedMotion: boolean }) {
 
   const frontMaterial = useMemo(
     () =>
-      new THREE.MeshPhysicalMaterial({
+      new THREE.MeshBasicMaterial({
         map: croppedTexture,
         alphaMap: croppedTexture,
         transparent: true,
-        alphaTest: 0.08,
+        alphaTest: 0.06,
         depthWrite: false,
-        roughness: 0.22,
-        metalness: 0.04,
-        clearcoat: 0.38,
-        clearcoatRoughness: 0.22,
-        emissive: new THREE.Color("#0b1220"),
-        emissiveIntensity: reducedMotion ? 0.02 : 0.04,
+        toneMapped: false,
         side: THREE.FrontSide
       }),
-    [croppedTexture, reducedMotion]
+    [croppedTexture]
   );
 
   const backMaterial = useMemo(
     () =>
-      new THREE.MeshPhysicalMaterial({
+      new THREE.MeshBasicMaterial({
         map: croppedTexture,
         alphaMap: croppedTexture,
         transparent: true,
-        alphaTest: 0.08,
+        alphaTest: 0.06,
         depthWrite: false,
-        roughness: 0.42,
-        metalness: 0.03,
-        clearcoat: 0.18,
-        clearcoatRoughness: 0.45,
-        opacity: 0.88,
-        color: new THREE.Color("#dce6ff"),
-        emissive: new THREE.Color("#0a0f1b"),
-        emissiveIntensity: 0.02,
+        opacity: reducedMotion ? 0.42 : 0.5,
+        color: new THREE.Color("#43598f"),
+        toneMapped: false,
         side: THREE.FrontSide
       }),
-    [croppedTexture]
+    [croppedTexture, reducedMotion]
   );
 
   const depthMaterial = useMemo(
@@ -123,25 +113,26 @@ function CroppedMark({ reducedMotion }: { reducedMotion: boolean }) {
         map: croppedTexture,
         alphaMap: croppedTexture,
         transparent: true,
-        alphaTest: 0.08,
+        alphaTest: 0.06,
         depthWrite: false,
-        opacity: 0.24,
-        color: new THREE.Color("#27324a"),
+        opacity: 0.14,
+        color: new THREE.Color("#32486d"),
+        toneMapped: false,
         side: THREE.DoubleSide
       }),
     [croppedTexture]
   );
 
-  const glowMaterial = useMemo(
+  const shadowMaterial = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
         map: croppedTexture,
         alphaMap: croppedTexture,
         transparent: true,
         depthWrite: false,
-        opacity: reducedMotion ? 0.04 : 0.075,
-        color: new THREE.Color("#7d95ff"),
-        blending: THREE.AdditiveBlending,
+        opacity: reducedMotion ? 0.035 : 0.06,
+        color: new THREE.Color("#48639a"),
+        toneMapped: false,
         side: THREE.DoubleSide
       }),
     [croppedTexture, reducedMotion]
@@ -155,13 +146,13 @@ function CroppedMark({ reducedMotion }: { reducedMotion: boolean }) {
       frontMaterial.dispose();
       backMaterial.dispose();
       depthMaterial.dispose();
-      glowMaterial.dispose();
+      shadowMaterial.dispose();
     };
-  }, [backMaterial, croppedTexture, depthMaterial, frontMaterial, glowMaterial, plane, shadowPlane]);
+  }, [backMaterial, croppedTexture, depthMaterial, frontMaterial, plane, shadowMaterial, shadowPlane]);
 
   return (
     <group position={[-0.22, 0.08, 0]}>
-      <mesh geometry={shadowPlane} material={glowMaterial} position={[0, -0.02, -0.2]} renderOrder={0} />
+      <mesh geometry={shadowPlane} material={shadowMaterial} position={[0.05, -0.04, -0.18]} renderOrder={0} />
 
       {DEPTH_LAYERS.map((z, index) => (
         <mesh
@@ -173,7 +164,7 @@ function CroppedMark({ reducedMotion }: { reducedMotion: boolean }) {
         />
       ))}
 
-      <mesh geometry={plane} material={backMaterial} position={[0, 0, -0.11]} rotation={[0, Math.PI, 0]} renderOrder={8} />
+      <mesh geometry={plane} material={backMaterial} position={[0, 0, -0.095]} rotation={[0, Math.PI, 0]} renderOrder={8} />
       <mesh geometry={plane} material={frontMaterial} position={[0, 0, 0.11]} renderOrder={9} />
     </group>
   );
@@ -219,12 +210,6 @@ function SceneRig({ mode, reducedMotion, dragStateRef }: SceneRigProps) {
 
   return (
     <>
-      <ambientLight intensity={1.15} color="#ffffff" />
-      <directionalLight intensity={2.1} color="#ffffff" position={[2.8, 3.6, 7.8]} />
-      <pointLight intensity={5.2} distance={11} color="#4adcf8" position={[-2.8, 1.2, 4.8]} />
-      <pointLight intensity={4.3} distance={10} color="#d347ff" position={[2.6, -1.1, 4.4]} />
-      <pointLight intensity={1.3} distance={10} color="#8ea2ff" position={[0.4, 2.8, 4.5]} />
-
       <group ref={markRef}>
         <Suspense fallback={null}>
           <CroppedMark reducedMotion={reducedMotion} />

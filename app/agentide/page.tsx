@@ -41,7 +41,7 @@ export default function AgentIDEPage() {
             </p>
           </div>
 
-          <a className="agentide-hero__link" href="https://github.com/LuxenAI/agent-tree" target="_blank" rel="noreferrer">
+          <a className="agentide-hero__link" href="https://github.com/IshaanAyaan/AgentIDE" target="_blank" rel="noreferrer">
             View GitHub
           </a>
         </header>
@@ -96,6 +96,8 @@ export default function AgentIDEPage() {
         <p className="agentide-page__caption">
           Install first, then use the runtime map to understand how work fans out across the system.
         </p>
+
+        <footer className="agentide-page__footer">2026 Luxen LLC. All rights reserved.</footer>
       </div>
     </section>
   );

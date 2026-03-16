@@ -221,6 +221,6 @@ export const contactFields: ContactFieldConfig[] = [
 ];
 
 export const externalLinks = {
-  agentIdeRepo: "https://github.com/IshaanAyaan/AgentIDE",
+  agentIdeRepo: "https://github.com/LuxenAI/agent-tree",
   interactiveTransformerRepo: "https://github.com/g4nesh/interactive-transformer"
 };

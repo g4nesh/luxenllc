@@ -254,8 +254,14 @@ code {
   color: var(--lux-ink-soft);
 }
 
-.home-page__cta {
+.home-page__actions {
   margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.home-page__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.72rem;
@@ -278,6 +284,10 @@ code {
 
 .home-page__cta strong {
   font-weight: 700;
+}
+
+.home-page__cta--secondary {
+  background: rgba(17, 19, 23, 0.04);
 }
 
 .home-page__cta-dot {
@@ -766,6 +776,15 @@ code {
 
   .home-page__content h1 {
     font-size: clamp(3.7rem, 19vw, 5rem);
+  }
+
+  .home-page__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-page__cta {
+    justify-content: center;
   }
 
   .home-page__footer {

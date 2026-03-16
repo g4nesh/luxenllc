@@ -24,6 +24,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--lux-white);
 }
 
 body {
@@ -35,6 +36,17 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+html:has(.agentide-page),
+body:has(.agentide-page),
+main:has(.agentide-page) {
+  background: linear-gradient(180deg, #090b10 0%, #05070b 100%);
+}
+
+html:has(.agentide-page),
+body:has(.agentide-page) {
+  overscroll-behavior-y: none;
 }
 
 main {
@@ -289,7 +301,7 @@ code {
 
 .agentide-page {
   position: relative;
-  min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   background: linear-gradient(180deg, #090b10 0%, #05070b 100%);
   color: var(--agent-text);

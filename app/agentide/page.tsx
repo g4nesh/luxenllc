@@ -3,7 +3,7 @@ import { CopyCommandButton } from "@/components/copy-command-button";
 import { LuxenNetworkBackground } from "@/components/luxen-network-background";
 
 export const metadata = {
-  title: "AgentIDE"
+  title: "AgentTree"
 };
 
 const masterAgent = {
@@ -35,7 +35,7 @@ export default function AgentIDEPage() {
         <header className="agentide-hero">
           <div className="agentide-hero__copy">
             <p className="agentide-hero__label">Currently Building</p>
-            <h1>AGENT IDE</h1>
+            <h1>AgentTree</h1>
             <p className="agentide-hero__description">
               A control surface for seeing, steering, and organizing live agents from one place.
             </p>
@@ -46,7 +46,20 @@ export default function AgentIDEPage() {
           </a>
         </header>
 
-        <CopyCommandButton command="npm install agent-tree-viewer" />
+        <CopyCommandButton
+          options={[
+            {
+              label: "npm install",
+              command: "npm install agent-tree-viewer",
+              description: "Install the viewer package locally and wire it into your own workflow."
+            },
+            {
+              label: "npx",
+              command: "npx agent-tree-viewer",
+              description: "Run AgentTree directly without a local install step."
+            }
+          ]}
+        />
 
         <section className="agentide-diagram">
           <div className="agentide-diagram__row agentide-diagram__row--master">
@@ -94,7 +107,8 @@ export default function AgentIDEPage() {
         </section>
 
         <p className="agentide-page__caption">
-          Install first, then use the runtime map to understand how work fans out across the system.
+          Install locally or launch directly, then use the runtime map to understand how work fans out across the
+          system.
         </p>
 
         <footer className="agentide-page__footer">2026 Luxen LLC. All rights reserved.</footer>

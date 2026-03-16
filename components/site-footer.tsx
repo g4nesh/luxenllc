@@ -25,7 +25,7 @@ export function SiteFooter() {
         <div>
           <p className="footer-links__title">Projects</p>
           <a href={externalLinks.agentIdeRepo} target="_blank" rel="noreferrer">
-            AgentIDE GitHub
+            AgentTree GitHub
           </a>
           <a href={externalLinks.interactiveTransformerRepo} target="_blank" rel="noreferrer">
             Interactive Transformer GitHub

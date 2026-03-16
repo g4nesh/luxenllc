@@ -25,7 +25,7 @@ export default function HomePage() {
             <Link className="home-page__cta" href="/agentide">
               <span className="home-page__cta-dot" aria-hidden="true" />
               <span>Currently Building:</span>
-              <strong>AgentIDE</strong>
+              <strong>AgentTree</strong>
               <span aria-hidden="true">→</span>
             </Link>
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | Luxen"
   },
   description:
-    "Luxen is an applied AI lab building AgentIDE and agentic automation systems.",
+    "Luxen is an applied AI lab building AgentTree and agentic automation systems.",
   icons: {
     icon: "/branding/luxen-mark.svg"
   }

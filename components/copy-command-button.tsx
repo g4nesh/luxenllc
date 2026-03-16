@@ -2,8 +2,15 @@
 
 import { useEffect, useState } from "react";
 
-type CopyCommandButtonProps = {
+type CommandOption = {
+  label: string;
   command: string;
+  description?: string;
+};
+
+type CopyCommandButtonProps = {
+  command?: string;
+  options?: CommandOption[];
 };
 
 async function copyText(command: string) {
@@ -23,8 +30,16 @@ async function copyText(command: string) {
   document.body.removeChild(textarea);
 }
 
-export function CopyCommandButton({ command }: CopyCommandButtonProps) {
+export function CopyCommandButton({ command, options }: CopyCommandButtonProps) {
+  const commandOptions = options?.length
+    ? options
+    : command
+      ? [{ label: "npm install", command, description: "Install the viewer package locally." }]
+      : [];
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const activeOption = commandOptions[selectedIndex] ?? commandOptions[0];
 
   useEffect(() => {
     if (!copied) {
@@ -35,9 +50,17 @@ export function CopyCommandButton({ command }: CopyCommandButtonProps) {
     return () => window.clearTimeout(timeout);
   }, [copied]);
 
+  useEffect(() => {
+    setCopied(false);
+  }, [selectedIndex]);
+
+  if (!activeOption) {
+    return null;
+  }
+
   const handleClick = async () => {
     try {
-      await copyText(command);
+      await copyText(activeOption.command);
       setCopied(true);
     } catch {
       setCopied(false);
@@ -61,17 +84,29 @@ export function CopyCommandButton({ command }: CopyCommandButtonProps) {
             <span />
           </div>
 
-          <div className="quickstart__tabs" aria-hidden="true">
-            <span className="is-active">npm</span>
+          <div className="quickstart__tabs" role="group" aria-label="Quick start command options">
+            {commandOptions.map((option, index) => (
+              <button
+                key={option.command}
+                className={`quickstart__tab${index === selectedIndex ? " is-active" : ""}`}
+                type="button"
+                aria-pressed={index === selectedIndex}
+                onClick={() => setSelectedIndex(index)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
         </div>
 
         <div className="quickstart__body">
-          <p className="quickstart__hint">Install and start exploring the agent tree immediately.</p>
+          <p className="quickstart__hint">
+            {activeOption.description ?? "Choose a command to install or launch the viewer immediately."}
+          </p>
 
           <div className="quickstart__command">
             <span className="quickstart__prompt">$</span>
-            <code>{command}</code>
+            <code>{activeOption.command}</code>
             <button className="quickstart__copy" type="button" onClick={handleClick}>
               {copied ? "Copied" : "Copy"}
             </button>
@@ -80,7 +115,7 @@ export function CopyCommandButton({ command }: CopyCommandButtonProps) {
       </div>
 
       <span className="sr-only" aria-live="polite">
-        {copied ? "Install command copied." : ""}
+        {copied ? "Command copied." : ""}
       </span>
     </section>
   );

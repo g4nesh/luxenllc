@@ -33,7 +33,7 @@ export type ContactFieldConfig = {
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
-  { label: "AgentIDE", href: "/agentide" },
+  { label: "AgentTree", href: "/agentide" },
   { label: "Labs", href: "/labs" },
   { label: "Company", href: "/company" },
   { label: "Contact", href: "/contact" }
@@ -43,13 +43,13 @@ export const heroContent = {
   eyebrow: "LUXEN",
   title: "The control plane for live agents.",
   body:
-    "We’re building AgentIDE, a local-first workspace for controlling, monitoring, and replaying live AI runtimes. Think VS Code for operators running real agents across Codex, OpenClaw, and the next generation of autonomous systems.",
+    "We’re building AgentTree, a local-first workspace for controlling, monitoring, and replaying live AI runtimes. Think VS Code for operators running real agents across Codex, OpenClaw, and the next generation of autonomous systems.",
   primaryCta: {
     label: "Request early access",
     href: "/contact"
   },
   secondaryCta: {
-    label: "Explore AgentIDE",
+    label: "Explore AgentTree",
     href: "/agentide"
   },
   hint: "Press and hold to inspect the mark."
@@ -77,7 +77,7 @@ export const homeFeatures: FeatureCard[] = [
     eyebrow: "Structured history",
     title: "Replay events, inspect payloads, and reopen work with context intact.",
     body:
-      "AgentIDE keeps event history, telemetry slices, and redacted replay flows close enough to act on instead of hiding them behind logs.",
+      "AgentTree keeps event history, telemetry slices, and redacted replay flows close enough to act on instead of hiding them behind logs.",
     iconKey: "replay"
   },
   {

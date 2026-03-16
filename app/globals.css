@@ -477,13 +477,31 @@ code {
 .quickstart__tabs {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
-.quickstart__tabs span {
+.quickstart__tab {
   padding: 0.42rem 0.78rem;
   border-radius: 12px;
+  border: 1px solid rgba(115, 132, 171, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(199, 212, 240, 0.78);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.quickstart__tab:hover,
+.quickstart__tab:focus-visible {
+  border-color: rgba(73, 222, 249, 0.34);
+  color: #edf3ff;
+  outline: none;
+}
+
+.quickstart__tab.is-active {
   color: rgba(17, 21, 28, 0.94);
   background: linear-gradient(90deg, #26d5eb, #38e0d6);
+  border-color: transparent;
 }
 
 .quickstart__body {
@@ -500,6 +518,7 @@ code {
 .quickstart__command {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.8rem;
   min-height: 58px;
   padding: 0.75rem 0.85rem;

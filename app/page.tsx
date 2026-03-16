@@ -42,7 +42,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <footer className="home-page__footer">© 2026 All Rights Reserved.</footer>
+      <footer className="home-page__footer">2026 Luxen LLC. All rights reserved.</footer>
     </section>
   );
 }

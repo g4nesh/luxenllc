@@ -41,7 +41,7 @@ export default function AgentIDEPage() {
             </p>
           </div>
 
-          <a className="agentide-hero__link" href="https://github.com/IshaanAyaan/AgentIDE" target="_blank" rel="noreferrer">
+          <a className="agentide-hero__link" href="https://github.com/LuxenAI/agent-tree" target="_blank" rel="noreferrer">
             View GitHub
           </a>
         </header>

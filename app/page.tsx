@@ -21,12 +21,24 @@ export default function HomePage() {
             agents reliable, fast, and truly autonomous.
           </p>
 
-          <Link className="home-page__cta" href="/agentide">
-            <span className="home-page__cta-dot" aria-hidden="true" />
-            <span>Currently Building:</span>
-            <strong>AgentIDE</strong>
-            <span aria-hidden="true">→</span>
-          </Link>
+          <div className="home-page__actions">
+            <Link className="home-page__cta" href="/agentide">
+              <span className="home-page__cta-dot" aria-hidden="true" />
+              <span>Currently Building:</span>
+              <strong>AgentIDE</strong>
+              <span aria-hidden="true">→</span>
+            </Link>
+
+            <a
+              className="home-page__cta home-page__cta--secondary"
+              href="https://cal.com/ganstal/luxen"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>Contact Us</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
 

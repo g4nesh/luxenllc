@@ -1,48 +1,104 @@
 import Link from "next/link";
-import { LuxenMarkHero } from "@/components/luxen-mark-hero";
+import { CopyCommandButton } from "@/components/copy-command-button";
 import { LuxenNetworkBackground } from "@/components/luxen-network-background";
 
-export default function HomePage() {
+export const metadata = {
+  title: "AgentIDE"
+};
+
+const masterAgent = {
+  status: "LIVE",
+  time: "now",
+  name: "Master Agent",
+  description: "You are in control.",
+  chip: "Control"
+};
+
+const leadAgents = [
+  { status: "LIVE", time: "now", name: "Planning Lead", description: "Breaks work into steps.", chip: "Planning" },
+  { status: "LIVE", time: "now", name: "Evidence Lead", description: "Finds the right inputs.", chip: "Evidence" },
+  { status: "LIVE", time: "now", name: "Synthesis Lead", description: "Combines outputs.", chip: "Synthesis" },
+  { status: "LIVE", time: "now", name: "Audit Lead", description: "Checks gaps and risks.", chip: "Audit" }
+];
+
+export default function AgentIDEPage() {
   return (
-    <section className="home-page">
-      <LuxenNetworkBackground />
+    <section className="agentide-page">
+      <LuxenNetworkBackground theme="dark" />
+      <div className="agentide-page__shade" aria-hidden="true" />
 
-      <div className="home-page__inner">
-        <div className="home-page__stage">
-          <LuxenMarkHero interactive className="luxen-hero--home" />
-        </div>
+      <div className="agentide-page__inner">
+        <Link className="agentide-page__back" href="/">
+          ← Back to Luxen
+        </Link>
 
-        <div className="home-page__content">
-          <p className="home-page__subtitle">Applied AI Lab</p>
-          <h1>LUXEN</h1>
-          <p className="home-page__statement">We are working on Agentic Automation.</p>
-          <p className="home-page__support">
-            While the industry races toward generalization, we focus on creating intelligent context layers that make
-            agents reliable, fast, and truly autonomous.
-          </p>
-
-          <div className="home-page__actions">
-            <Link className="home-page__cta" href="/agentide">
-              <span className="home-page__cta-dot" aria-hidden="true" />
-              <span>Currently Building:</span>
-              <strong>AgentIDE</strong>
-              <span aria-hidden="true">→</span>
-            </Link>
-
-            <a
-              className="home-page__cta home-page__cta--secondary"
-              href="https://cal.com/ganstal/luxen"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>Contact Us</span>
-              <span aria-hidden="true">↗</span>
-            </a>
+        <header className="agentide-hero">
+          <div className="agentide-hero__copy">
+            <p className="agentide-hero__label">Currently Building</p>
+            <h1>AGENT IDE</h1>
+            <p className="agentide-hero__description">
+              A control surface for seeing, steering, and organizing live agents from one place.
+            </p>
           </div>
-        </div>
-      </div>
 
-      <footer className="home-page__footer">2026 Luxen LLC. All rights reserved.</footer>
+          <a className="agentide-hero__link" href="https://github.com/IshaanAyaan/AgentIDE" target="_blank" rel="noreferrer">
+            View GitHub
+          </a>
+        </header>
+
+        <CopyCommandButton command="npm install agent-tree-viewer" />
+
+        <section className="agentide-diagram">
+          <div className="agentide-diagram__row agentide-diagram__row--master">
+            <div className="agentide-tier">
+              <span>TIER 0</span>
+              <strong>MASTER</strong>
+            </div>
+
+            <article className="agentide-card agentide-card--master">
+              <div className="agentide-card__top">
+                <span>{masterAgent.status}</span>
+                <span>{masterAgent.time}</span>
+              </div>
+              <h2>{masterAgent.name}</h2>
+              <p>{masterAgent.description}</p>
+              <small>{masterAgent.chip}</small>
+            </article>
+          </div>
+
+          <div className="agentide-diagram__flow" aria-hidden="true">
+            <span className="agentide-diagram__stem" />
+            <span className="agentide-diagram__rail" />
+          </div>
+
+          <div className="agentide-diagram__row agentide-diagram__row--lead">
+            <div className="agentide-tier">
+              <span>TIER 1</span>
+              <strong>LEAD AGENTS</strong>
+            </div>
+
+            <div className="agentide-diagram__grid">
+              {leadAgents.map((card) => (
+                <article className="agentide-card" key={card.name}>
+                  <div className="agentide-card__top">
+                    <span>{card.status}</span>
+                    <span>{card.time}</span>
+                  </div>
+                  <h2>{card.name}</h2>
+                  <p>{card.description}</p>
+                  <small>{card.chip}</small>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <p className="agentide-page__caption">
+          Install first, then use the runtime map to understand how work fans out across the system.
+        </p>
+
+        <footer className="agentide-page__footer">2026 Luxen LLC. All rights reserved.</footer>
+      </div>
     </section>
   );
 }

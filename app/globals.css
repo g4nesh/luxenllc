@@ -689,6 +689,11 @@ code {
   font-size: 0.98rem;
 }
 
+.agentide-page__footer {
+  color: rgba(203, 212, 233, 0.42);
+  font-size: 0.84rem;
+}
+
 @keyframes homeGlow {
   0% {
     opacity: 0.36;
